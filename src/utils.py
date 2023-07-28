@@ -1,0 +1,10 @@
+def print_title(title: str) -> None:
+    print(f"\033[92m\n=== {title.upper()} ===\033[0m")  # \033[92m is the ANSI escape code for green
+
+def bold(text: str) -> str:
+    """Return the input string formatted with ANSI bold codes."""
+    return f"\033[1m{text}\033[0m"
+
+def print_bold_kv(label: str, value: str) -> None:
+    print(f"{bold(label)}: {value}")
+
