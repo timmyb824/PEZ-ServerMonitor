@@ -9,6 +9,12 @@ from system_info import print_system_info
 from container_info import print_running_containers
 
 def parse_args():
+    """
+    Parses command-line arguments.
+
+    Returns:
+        Namespace: Parsed command-line arguments.
+    """
     parser = argparse.ArgumentParser(description='System information tool.')
     parser.add_argument('-a', '--all', action='store_true', help='Show all information')
     parser.add_argument('-s', '--system', action='store_true', help='Show only system information')
@@ -21,28 +27,40 @@ def parse_args():
     return parser.parse_args()
 
 def main(args) -> None:
-    # All information
-    if args.all:
-        print_all_info()
-    elif args.system:
-        print_system_info()
-    elif args.cpu:
-        print_cpu_info()
-    elif args.memory:
-        print_memory_info()
-    elif args.disk:
-        print_disk_info()
-    elif args.network:
-        print_network_info()
-        print_latency_info()
-    elif args.processes:
-        print_process_info()
-    elif args.containers:
-        print_running_containers()
-    else:
-        print("No arguments given. Use -h or --help for help.")
+    """
+    Main function which triggers based on the arguments provided.
+
+    Args:
+        args (Namespace): Parsed command-line arguments.
+    """
+    try:
+        # All information
+        if args.all:
+            print_all_info()
+        elif args.system:
+            print_system_info()
+        elif args.cpu:
+            print_cpu_info()
+        elif args.memory:
+            print_memory_info()
+        elif args.disk:
+            print_disk_info()
+        elif args.network:
+            print_network_info()
+            print_latency_info()
+        elif args.processes:
+            print_process_info()
+        elif args.containers:
+            print_running_containers()
+        else:
+            print("No arguments given. Use -h or --help for help.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 def print_all_info():
+    """
+    Prints all system-related information.
+    """
     print_system_info()
     print_cpu_info()
     print_memory_info()

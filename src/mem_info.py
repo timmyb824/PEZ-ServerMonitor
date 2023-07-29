@@ -1,21 +1,64 @@
 from tabulate import tabulate
 from utils import print_title
 
-# Memory
+def calculate_memory_usage(total: int, free: int, buffers: int, cached: int) -> tuple[int, int, float]:
+    """
+    Calculate the total, free, and used percentage for memory or swap.
+
+    Parameters:
+        total (int): Total memory or swap.
+        free (int): Free memory or swap.
+        buffers (int): Buffered memory (only applicable for memory, not swap).
+        cached (int): Cached memory (only applicable for memory, not swap).
+
+    Returns:
+        tuple: Total, free, and used percentage.
+    """
+    total //= 1024
+    free = (free + buffers + cached) // 1024
+    used_percentage = ((total - free) / total) * 100 if total != 0 else 0
+
+    return total, free, used_percentage
+
+# In your get_memory_info function:
+
 def get_memory_info() -> tuple[int, int, float, int, int, float]:
-    mem_info = {
-        i.split()[0].rstrip(':'): int(i.split()[1])
-        for i in open('/proc/meminfo').readlines()
-    }
-    mem_total = mem_info['MemTotal'] // 1024
-    mem_free = (mem_info['MemFree'] + mem_info['Buffers'] + mem_info['Cached']) // 1024
-    mem_used_percentage = ((mem_total - mem_free) / mem_total) * 100
-    swap_total = mem_info['SwapTotal'] // 1024
-    swap_free = mem_info['SwapFree'] // 1024
-    swap_used_percentage = ((swap_total - swap_free) / swap_total) * 100
+    """
+    Extract memory information from '/proc/meminfo'
+
+    Returns:
+        tuple: containing total memory, free memory, memory usage percentage,
+               total swap, free swap, swap usage percentage
+    """
+    try:
+        mem_info = {
+            i.split()[0].rstrip(':'): int(i.split()[1])
+            for i in open('/proc/meminfo').readlines()
+        }
+    except (FileNotFoundError, PermissionError) as e:
+        print(f"Error reading file '/proc/meminfo': {e}")
+        return (0, 0, 0, 0, 0, 0)
+
+    keys = ['MemTotal', 'MemFree', 'Buffers', 'Cached', 'SwapTotal', 'SwapFree']
+    if any(key not in mem_info for key in keys):
+        print("Not all keys found in '/proc/meminfo'")
+        return (0, 0, 0, 0, 0, 0)
+
+    mem_total, mem_free, mem_used_percentage = calculate_memory_usage(
+        mem_info['MemTotal'], mem_info['MemFree'], mem_info['Buffers'], mem_info['Cached']
+    )
+
+    swap_total, swap_free, swap_used_percentage = calculate_memory_usage(
+        mem_info['SwapTotal'], mem_info['SwapFree'], 0, 0
+    )
+
     return mem_total, mem_free, mem_used_percentage, swap_total, swap_free, swap_used_percentage
 
-def print_memory_info():
+
+def print_memory_info() -> None:
+    """
+    Print the memory information table
+    """
     # Memory
     mem_total, mem_free, mem_used_percentage, swap_total, swap_free, swap_used_percentage = get_memory_info()
 

@@ -3,20 +3,23 @@ import psutil
 from tabulate import tabulate
 from utils import print_title
 
-# Disk space
-# def get_disk_space() -> str:
-#     return subprocess.run(['df', '-h'], capture_output=True, text=True, check=False).stdout
+def get_disk_space() -> list[dict]:
+    """
+    Retrieves disk space information.
 
-# def print_disk_info() -> None:
-#     # Disk space
-#     print_title('Disk Information')
-#     print(get_disk_space())
-
-def get_disk_space():
+    Returns:
+    list: A list of dictionaries, each containing information about a disk partition.
+    """
     partitions = psutil.disk_partitions()
     disk_space_info = []
+
     for partition in partitions:
-        usage = psutil.disk_usage(partition.mountpoint)
+        try:
+            usage = psutil.disk_usage(partition.mountpoint)
+        except PermissionError:
+            # This can be catched due to a disk that isn't ready
+            continue
+
         disk_space_info.append({
             'device': partition.device,
             'mountpoint': partition.mountpoint,
@@ -27,7 +30,10 @@ def get_disk_space():
         })
     return disk_space_info
 
-def print_disk_info():
+def print_disk_info() -> None:
+    """
+    Prints disk space information.
+    """
     print_title('Disk Information')
     disk_space_info = get_disk_space()
 
