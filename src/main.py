@@ -39,7 +39,7 @@ def main(args) -> None:
     """
     try:
 
-        # Parse config file
+        # Parse config file (default config is used if no config file is provided)
         config_file = args.config
 
         # All information

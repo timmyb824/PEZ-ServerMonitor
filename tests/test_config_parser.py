@@ -145,53 +145,48 @@
 
 import pytest
 import yaml
-from src.config_parser import parse_config_file
+from src.config_parser import parse_config_file, ConfigFileNotFoundException, YAMLParseError, UnexpectedError
 
-def test_parse_valid_config_file(tmpdir):
-    valid_config = """
-    services:
-        - name: FTP Server
-          port: 21
-          host: localhost
-    ping_hosts:
-        - google.com
-    """
-    yaml_file = tmpdir.join("valid_config.yaml")
-    yaml_file.write(valid_config)
 
-    config = parse_config_file(str(yaml_file))
-    assert config == yaml.safe_load(valid_config)
+def test_parse_config_file_success(tmpdir):
+    # Create a temporary YAML file for testing
+    file_path = tmpdir.join("config.yaml")
+    config_dict = {
+        'services': [{'name': 'Test Service', 'port': 1234, 'host': 'localhost'}],
+        'ping_hosts': ['localhost']
+    }
+    with open(file_path, 'w') as f:
+        yaml.dump(config_dict, f)
 
-def test_file_not_found():
-    with pytest.raises(SystemExit):
-        parse_config_file("non_existent_file.yaml")
+    # Ensure parse_config_file successfully parses the file
+    assert parse_config_file(file_path) == config_dict
 
-def test_invalid_yaml_file(tmpdir):
-    invalid_yaml = """
-    services
-        - name: FTP Server
-          port: 21
-          host: localhost
-    """
-    yaml_file = tmpdir.join("invalid_config.yaml")
-    yaml_file.write(invalid_yaml)
+def test_parse_config_file_file_not_found():
+    with pytest.raises(ConfigFileNotFoundException):
+        parse_config_file('nonexistent.yaml')
 
-    with pytest.raises(SystemExit):
-        parse_config_file(str(yaml_file))
+def test_parse_config_file_yaml_error(tmpdir):
+    # Create a temporary file that is not a valid YAML
+    file_path = tmpdir.join("config.yaml")
+    with open(file_path, 'w') as f:
+        f.write("{ unbalanced braces")
 
-def test_unexpected_error(mocker, tmpdir):
-    valid_config = """
-    services:
-        - name: FTP Server
-          port: 21
-          host: localhost
-    ping_hosts:
-        - google.com
-    """
-    yaml_file = tmpdir.join("valid_config.yaml")
-    yaml_file.write(valid_config)
+    with pytest.raises(YAMLParseError):
+        parse_config_file(file_path)
 
-    mocker.patch('builtins.open', side_effect=Exception('Unexpected error'))
+def test_parse_config_file_unexpected_error(mocker, tmpdir):
+    # Create a valid temporary YAML file for testing
+    file_path = tmpdir.join("config.yaml")
+    config_dict = {
+        'services': [{'name': 'Test Service', 'port': 1234, 'host': 'localhost'}],
+        'ping_hosts': ['localhost']
+    }
+    with open(file_path, 'w') as f:
+        yaml.dump(config_dict, f)
 
-    with pytest.raises(SystemExit):
-        parse_config_file(str(yaml_file))
+    # Mock yaml.safe_load to raise an Exception
+    mocker.patch('yaml.safe_load', side_effect=Exception("Unexpected!"))
+
+    with pytest.raises(UnexpectedError):
+        parse_config_file(file_path)
+
