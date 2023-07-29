@@ -1,4 +1,5 @@
 def print_title(title: str) -> None:
+    """Print a title in green."""
     print(f"\033[92m\n=== {title.upper()} ===\033[0m")  # \033[92m is the ANSI escape code for green
 
 def bold(text: str) -> str:
@@ -6,5 +7,6 @@ def bold(text: str) -> str:
     return f"\033[1m{text}\033[0m"
 
 def print_bold_kv(label: str, value: str) -> None:
+    """Print a key-value pair with the key in bold."""
     print(f"{bold(label)}: {value}")
 

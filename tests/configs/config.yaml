@@ -1,0 +1,34 @@
+services:
+  - name: FTP Server
+    port: 21
+    host: localhost
+  - name: SSH
+    port: 22
+    host: localhost
+  - name: HTTP
+    port: 80
+    host: localhost
+  - name: HTTPS
+    port: 443
+    host: localhost
+  - name: MySQL Server
+    port: 3306
+    host: localhost
+  - name: PostgreSQL Server
+    port: 5432
+    host: localhost
+  - name: Zabbix-Agent
+    port: 10050
+    host: localhost
+  - name: Prometheus
+    port: 9090
+    host: localhost
+
+ping_hosts:
+  - google.com
+  - facebook.com
+  - twitter.com
+  - timothybryantjr.com
+  - github.com
+  - https://heimdall.local.timmybtech.com
+  - adguardhome.timmybtech.com

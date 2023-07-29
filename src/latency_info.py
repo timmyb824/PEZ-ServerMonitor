@@ -44,13 +44,16 @@ def calculate_average_latency(ping_results: list) -> float:
     avg_latency = total_latency / count if count != 0 else float('NaN')
     return round(avg_latency, 2)
 
-def print_latency_info() -> None:
+def print_latency_info(config_file: str) -> None:
     """
     Prints latency information.
+
+    Args:
+    config_file (str): The path to the config file.
     """
     try:
         # Ping
-        config = parse_config_file('config.yaml')
+        config = parse_config_file(config_file)
         ping_hosts = config['ping_hosts']
 
         ping_results = []
@@ -74,4 +77,4 @@ def print_latency_info() -> None:
         print_bold_kv("Average Round-Trip Delay", f"{'N/A' if math.isnan(average_latency) else average_latency} ms")
         print(tabulate(ping_results, headers=["Host", "Round-Trip Delay"], tablefmt="simple_grid"))
     except FileNotFoundError:
-        print("Error: config.yaml not found.")
+        print("Error: config yaml not found.")

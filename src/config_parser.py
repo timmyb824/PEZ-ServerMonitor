@@ -1,16 +1,17 @@
 import yaml
-from constants import ROOT_DIR
 
-file_path = f"{ROOT_DIR}/config.yaml"
+def parse_config_file(yaml_file: str) -> dict|None:
+    """Parse the configuration file and return the content as a Python dictionary.
 
-def parse_config_file(file_path: str) -> dict|None:
-    """Parse the configuration file and return the content as a Python dictionary."""
+    Args:
+        yaml_file (str): The path to the config yaml file.
+    """
     try:
-        with open(file_path, 'r') as config_file:
+        with open(yaml_file, 'r') as config_file:
             config = yaml.safe_load(config_file)
         return config
     except FileNotFoundError:
-        print(f"Config file {file_path} not found.")
+        print(f"Config file {yaml_file} not found.")
         exit(1)
     except yaml.YAMLError as exception:
         print(f"Error parsing config file: {exception}")

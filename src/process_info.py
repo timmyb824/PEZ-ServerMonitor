@@ -35,16 +35,19 @@ def get_process_count() -> int:
     all_processes = psutil.pids()
     return len(all_processes)
 
-def print_process_info() -> None:
+def print_process_info(config_file: str) -> None:
     """
     Prints the information about all the services defined in the 'config.yaml' file.
+
+    Args:
+        config_file (str): The path to the config file.
     """
     print_title('Services Information')
 
     try:
-        config = parse_config_file('config.yaml')
+        config = parse_config_file(config_file)
     except FileNotFoundError:
-        print("Config file 'config.yaml' not found.")
+        print("Error: config yaml not found.")
         return
 
     services = config['services']

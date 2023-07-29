@@ -24,6 +24,8 @@ def parse_args():
     parser.add_argument('-n', '--network', action='store_true', help='Show only network and latency information')
     parser.add_argument('-ps', '--processes', action='store_true', help='Show only services information')
     parser.add_argument('-dp', '--containers', action='store_true', help='Show only container (docker or podman) information')
+    parser.add_argument('-cf', '--config', type=str, required=True, help='The path to the config file')
+
     return parser.parse_args()
 
 def main(args) -> None:
@@ -34,9 +36,13 @@ def main(args) -> None:
         args (Namespace): Parsed command-line arguments.
     """
     try:
+
+        # Parse config file
+        config_file = args.config
+
         # All information
         if args.all:
-            print_all_info()
+            print_all_info(config_file)
         elif args.system:
             print_system_info()
         elif args.cpu:
@@ -47,9 +53,9 @@ def main(args) -> None:
             print_disk_info()
         elif args.network:
             print_network_info()
-            print_latency_info()
+            print_latency_info(config_file)
         elif args.processes:
-            print_process_info()
+            print_process_info(config_file)
         elif args.containers:
             print_running_containers()
         else:
@@ -57,17 +63,20 @@ def main(args) -> None:
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def print_all_info():
+def print_all_info(config_file: str):
     """
     Prints all system-related information.
+
+    Args:
+        config_file (str): The path to the config file.
     """
     print_system_info()
     print_cpu_info()
     print_memory_info()
     print_disk_info()
     print_network_info()
-    print_latency_info()
-    print_process_info()
+    print_latency_info(config_file)
+    print_process_info(config_file)
     print_running_containers()
 
 if __name__ == '__main__':
