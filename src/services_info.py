@@ -2,7 +2,7 @@ import socket
 from tabulate import tabulate
 import psutil
 from utils import print_title
-from config_parser import parse_config_file
+from config_parser import parse_config_file, ConfigFileNotFoundException, YAMLParseError, UnexpectedError
 
 def check_a_service(port: int, host: str) -> bool:
     """
@@ -46,9 +46,19 @@ def print_process_info(config_file: str) -> None:
 
     try:
         config = parse_config_file(config_file)
-    except FileNotFoundError:
+    except FileNotFoundError as exception:
         print("Error: config yaml not found.")
         return
+    except ConfigFileNotFoundException as exception:
+        print("Error: config yaml not found.")
+        return
+    except YAMLParseError:
+        print("Error: Failed to parse config yaml.")
+        return
+    except UnexpectedError as exception:
+        print(f"Unexpected error: {exception}")
+        return
+
 
     services = config['services']
 

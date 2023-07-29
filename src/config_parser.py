@@ -1,24 +1,26 @@
-import yaml
+# original working version
+# import yaml
 
-def parse_config_file(yaml_file: str) -> dict|None:
-    """Parse the configuration file and return the content as a Python dictionary.
+# def parse_config_file(yaml_file: str) -> dict|None:
+#     """Parse the configuration file and return the content as a Python dictionary.
 
-    Args:
-        yaml_file (str): The path to the config yaml file.
-    """
-    try:
-        with open(yaml_file, 'r') as config_file:
-            config = yaml.safe_load(config_file)
-        return config
-    except FileNotFoundError:
-        print(f"Config file {yaml_file} not found.")
-        exit(1)
-    except yaml.YAMLError as exception:
-        print(f"Error parsing config file: {exception}")
-        exit(1)
-    except Exception as exception:
-        print(f"Unexpected error: {exception}")
+#     Args:
+#         yaml_file (str): The path to the config yaml file.
+#     """
+#     try:
+#         with open(yaml_file, 'r') as config_file:
+#             config = yaml.safe_load(config_file)
+#         return config
+#     except FileNotFoundError:
+#         print(f"Config file {yaml_file} not found.")
+#         exit(1)
+#     except yaml.YAMLError as exception:
+#         print(f"Error parsing config file: {exception}")
+#         exit(1)
+#     except Exception as exception:
+#         print(f"Unexpected error: {exception}")
 
+#########
 
 ## move exception handling to classes
 # import yaml
@@ -47,3 +49,42 @@ def parse_config_file(yaml_file: str) -> dict|None:
 #     except Exception as exception:
 #         print(f"Unexpected error: {exception}")
 #         raise
+
+#########
+
+# move exception handling to classes version 2
+import yaml
+
+class ConfigFileNotFoundException(Exception):
+    """Raised when the config file is not found"""
+    pass
+
+class YAMLParseError(Exception):
+    """Raised when there's an error parsing the YAML file"""
+    pass
+
+class UnexpectedError(Exception):
+    """Raised when an unexpected error occurs"""
+    pass
+
+def parse_config_file(yaml_file: str) -> dict|None:
+    """Parse the configuration file and return the content as a Python dictionary.
+
+    Args:
+        yaml_file (str): The path to the config yaml file.
+
+    Raises:
+        ConfigFileNotFoundException: If the config file is not found.
+        YAMLParseError: If there is an error parsing the YAML file.
+        UnexpectedError: If any other unexpected error occurs.
+    """
+    try:
+        with open(yaml_file, 'r') as config_file:
+            config = yaml.safe_load(config_file)
+        return config
+    except FileNotFoundError as exception:
+        raise ConfigFileNotFoundException(f"Config file {yaml_file} not found.") from exception
+    except yaml.YAMLError as exception:
+        raise YAMLParseError(f"Error parsing config file: {exception}") from exception
+    except Exception as exception:
+        raise UnexpectedError(f"Unexpected error: {exception}") from exception

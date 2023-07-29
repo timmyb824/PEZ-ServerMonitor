@@ -2,7 +2,7 @@ import math
 from tabulate import tabulate
 from ping3 import ping, verbose_ping
 from utils import print_title, print_bold_kv
-from config_parser import parse_config_file
+from config_parser import parse_config_file, ConfigFileNotFoundException, YAMLParseError, UnexpectedError
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def check_ping(host: str) -> str:
@@ -21,8 +21,8 @@ def check_ping(host: str) -> str:
             return 'Timed Out'
         latency *= 1000  # Convert seconds to milliseconds
         return round(latency, 2)
-    except Exception as e:
-        return f"Error: {e}"
+    except Exception as exception:
+        return f"Error: {exception}"
 
 def calculate_average_latency(ping_results: list) -> float:
     """
@@ -44,37 +44,61 @@ def calculate_average_latency(ping_results: list) -> float:
     avg_latency = total_latency / count if count != 0 else float('NaN')
     return round(avg_latency, 2)
 
+def perform_ping(ping_hosts: list) -> list:
+    """
+    Perform ping on each host and store results.
+
+    Args:
+    ping_hosts (list): List of hosts to be pinged.
+
+    Returns:
+    list: Ping results.
+    """
+    ping_results = []
+    with ThreadPoolExecutor(max_workers=len(ping_hosts)) as executor:
+        future_to_host = {executor.submit(check_ping, host): host for host in ping_hosts}
+        for future in as_completed(future_to_host):
+            host = future_to_host[future]
+            try:
+                ping_time = future.result()
+            except Exception as exc:
+                print('%r generated an exception: %s' % (host, exc))
+            else:
+                if ping_time != "Timed Out":
+                    ping_results.append([host, f"{ping_time} ms"])
+                else:
+                    ping_results.append([host, ping_time])
+    return ping_results
+
 def print_latency_info(config_file: str) -> None:
+    # sourcery skip: extract-method
     """
     Prints latency information.
 
     Args:
     config_file (str): The path to the config file.
     """
+    print_title("Latency Information")
+
     try:
-        # Ping
         config = parse_config_file(config_file)
         ping_hosts = config['ping_hosts']
 
-        ping_results = []
-        with ThreadPoolExecutor(max_workers=len(ping_hosts)) as executor:
-            future_to_host = {executor.submit(check_ping, host): host for host in ping_hosts}
-            for future in as_completed(future_to_host):
-                host = future_to_host[future]
-                try:
-                    ping_time = future.result()
-                except Exception as exc:
-                    print('%r generated an exception: %s' % (host, exc))
-                else:
-                    if ping_time != "Timed Out":
-                        ping_results.append([host, f"{ping_time} ms"])
-                    else:
-                        ping_results.append([host, ping_time])
+        ping_results = perform_ping(ping_hosts)
 
         average_latency = calculate_average_latency(ping_results)
 
-        print_title("Latency Information")
         print_bold_kv("Average Round-Trip Delay", f"{'N/A' if math.isnan(average_latency) else average_latency} ms")
         print(tabulate(ping_results, headers=["Host", "Round-Trip Delay"], tablefmt="simple_grid"))
-    except FileNotFoundError:
+    except FileNotFoundError as exception:
         print("Error: config yaml not found.")
+        return
+    except ConfigFileNotFoundException as exception:
+        print("Error: config yaml not found.")
+        return
+    except YAMLParseError:
+        print("Error: Failed to parse config yaml.")
+        return
+    except UnexpectedError as exception:
+        print(f"Unexpected error: {exception}")
+        return

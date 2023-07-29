@@ -8,6 +8,7 @@ from services_info import print_process_info
 from system_info import print_system_info
 from container_info import print_running_containers
 from processes_info import print_memory_usage_info, print_cpu_usage_info
+from constants import ROOT_DIR
 
 def parse_args():
     """
@@ -25,7 +26,7 @@ def parse_args():
     parser.add_argument('-n', '--network', action='store_true', help='Show only network and latency information')
     parser.add_argument('-ps', '--processes', action='store_true', help='Show only services information')
     parser.add_argument('-dp', '--containers', action='store_true', help='Show only container (docker or podman) information')
-    parser.add_argument('-cf', '--config', type=str, required=True, help='The path to the config file')
+    parser.add_argument('-cf', '--config', default=f"{ROOT_DIR}/config.yaml", help='The path to the config file')
 
     return parser.parse_args()
 
@@ -63,8 +64,8 @@ def main(args) -> None:
             print_running_containers()
         else:
             print("No arguments given. Use -h or --help for help.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    except Exception as exception:
+        print(f"An error occurred: {exception}")
 
 def print_all_info(config_file: str):
     """
