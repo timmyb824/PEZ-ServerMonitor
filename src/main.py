@@ -4,9 +4,10 @@ from disk_info import print_disk_info
 from mem_info import print_memory_info
 from network_info import print_network_info
 from latency_info import print_latency_info
-from process_info import print_process_info
+from services_info import print_process_info
 from system_info import print_system_info
 from container_info import print_running_containers
+from processes_info import print_memory_usage_info, print_cpu_usage_info
 
 def parse_args():
     """
@@ -47,8 +48,10 @@ def main(args) -> None:
             print_system_info()
         elif args.cpu:
             print_cpu_info()
+            print_cpu_usage_info()
         elif args.memory:
             print_memory_info()
+            print_memory_usage_info()
         elif args.disk:
             print_disk_info()
         elif args.network:
@@ -72,7 +75,9 @@ def print_all_info(config_file: str):
     """
     print_system_info()
     print_cpu_info()
+    print_cpu_usage_info()
     print_memory_info()
+    print_memory_usage_info()
     print_disk_info()
     print_network_info()
     print_latency_info(config_file)
