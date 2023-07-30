@@ -5,8 +5,13 @@ from constants import GET_WAN_IP
 from tabulate import tabulate
 from utils import print_title
 
-# Network
 def get_network_info() -> tuple[dict[str, str], tuple[str, str]]:
+    """
+    Gets LAN and WAN network information of the system.
+
+    Returns:
+        tuple: A dictionary containing LAN network information and a tuple containing WAN network information.
+    """
     ip_lan_dict = {}
     for interface in netifaces.interfaces():
         if interface == 'lo':
@@ -15,10 +20,22 @@ def get_network_info() -> tuple[dict[str, str], tuple[str, str]]:
         if netifaces.AF_INET in addr_data:
             ip_lan = addr_data[netifaces.AF_INET][0]['addr']
             ip_lan_dict[interface] = ip_lan
-    ip_wan = urllib.request.urlopen(GET_WAN_IP).read().decode().strip()
+
+    try:
+        ip_wan = urllib.request.urlopen(GET_WAN_IP).read().decode().strip()
+    except Exception as e:
+        print(f"Error getting WAN IP: {e}")
+        ip_wan = "N/A"
+
     return ip_lan_dict, ("WAN", ip_wan)
 
 def get_network_activity() -> dict[str, dict[str, int]]:
+    """
+    Gets network activity for each network interface.
+
+    Returns:
+        dict: A dictionary with network interfaces as keys and another dictionary containing 'bytes_sent' and 'bytes_recv' as values.
+    """
     io_counters = psutil.net_io_counters(pernic=True)
     return {
         interface: {
@@ -29,7 +46,9 @@ def get_network_activity() -> dict[str, dict[str, int]]:
     }
 
 def print_network_info() -> None:
-    # Network
+    """
+    Prints network information (LAN and WAN IPs, MB sent and received).
+    """
     print_title("Network Information")
     ip_lan, ip_wan = get_network_info()
     network_activity = get_network_activity()
