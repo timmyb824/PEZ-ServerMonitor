@@ -48,6 +48,11 @@ jobs:
         run: |
           poetry run python -m pytest -xvvv tests/
 
+      - name: Check for docker container running
+        shell: bash
+        run: |
+          docker ps -a
+
       - name: Run tool
         if: success()
         shell: bash
