@@ -91,7 +91,7 @@ def print_latency_info(config_file: str) -> None:
 
         print_bold_kv("Average Round-Trip Delay", f"{'N/A' if math.isnan(average_latency) else average_latency} ms")
         print(tabulate(ping_results, headers=["Host", "Round-Trip Delay"], tablefmt="simple_grid"))
-    except FileNotFoundError as exception:
+    except FileNotFoundError:
         print("Error: config yaml not found.")
         return
     except ConfigFileNotFoundException as exception:

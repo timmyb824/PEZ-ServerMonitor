@@ -1,10 +1,33 @@
 import os
 import psutil
 import platform
-from typing import Union
+from typing import Union, Literal
 from utils import print_title, print_bold_kv
 
-def get_cpu_info() -> tuple[int, str, Union[str, int], str, str]:
+def get_cpu_cache_and_bogomips() -> tuple[str, str]:
+    """
+    Tries to get cpu_cache and cpu_bogomips from /proc/cpuinfo and
+    if it fails, then return 'UNKNOWN'.
+
+    Returns:
+    tuple: A tuple containing cpu_cache and cpu_bogomips.
+    """
+    try:
+        with open('/proc/cpuinfo', encoding="UTF-8") as f:
+            cpuinfo = f.readlines()
+
+        cpu_cache = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('cache size'))
+        cpu_bogomips = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('bogomips'))
+
+        return cpu_cache, cpu_bogomips
+    except IOError:
+        # print(f"Error reading CPU cache size and bogomips: {exception}")
+        return 'UNKNOWN', 'UNKNOWN'
+    except Exception:
+        # print(f"Error reading CPU cache size and bogomips: {exception}")
+        return 'UNKNOWN', 'UNKNOWN'
+
+def get_cpu_info() -> tuple[int, str, Union[float, Literal['Unknown']], str, str]:
     """
     Gets CPU information.
 
@@ -12,24 +35,19 @@ def get_cpu_info() -> tuple[int, str, Union[str, int], str, str]:
     tuple: A tuple containing the number of CPUs, CPU info, frequency, cache size, and bogomips.
     """
     try:
-        with open('/proc/cpuinfo') as f:
-            cpuinfo = f.readlines()
+        cpu_nb = psutil.cpu_count() if psutil.cpu_count() is not None else 0
+        cpu_info = platform.processor() or 'UNKNOWN'
+        cpu_freq = psutil.cpu_freq().max if psutil.cpu_freq() is not None else 0
 
-        cpu_nb = len([line for line in cpuinfo if line.startswith('processor')])
-        cpu_info = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('model name'))
-        cpu_freq = next((line.split(': ')[1].strip() for line in cpuinfo if line.startswith('cpu MHz')), None)
-
-        if cpu_freq is None:
-            with open('/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq', "r", encoding="UTF-8") as f:
-                cpu_freq = int(f.read().strip()) // 1000
-
-        cpu_cache = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('cache size'))
-        cpu_bogomips = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('bogomips'))
+        # cache size and bogomips are not available via psutil so we need to get them from files
+        cpu_cache, cpu_bogomips = get_cpu_cache_and_bogomips()
+        # cpu_cache = 'UNKNOWN'
+        # cpu_bogomips = 'UNKNOWN'
 
         return cpu_nb, cpu_info, cpu_freq, cpu_cache, cpu_bogomips
-    except IOError as exception:
+    except psutil.Error as exception:
         print(f"Error reading CPU info: {exception}")
-        return 0, 'UNKNOWN', '0', 'UNKNOWN', 'UNKNOWN'
+        return 0, 'UNKNOWN', 0, 'UNKNOWN', 'UNKNOWN'
 
 
 def get_cpu_usage() -> float:

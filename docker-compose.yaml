@@ -5,4 +5,4 @@ services:
   pez-servermonitor:
     build: .
     container_name: pez-servermonitor
-    command: python src/main.py -m
+    command: python src/main.py -a
