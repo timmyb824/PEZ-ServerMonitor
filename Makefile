@@ -13,3 +13,7 @@ run-coverage-tests:
 run-coverage-report:
 	@echo "Running coverage report"
 	coverage report -m
+
+ignore-pre-commit:
+	@echo "Ignoring pre-commit"
+	git commit --no-verify -m "$(msg)"
