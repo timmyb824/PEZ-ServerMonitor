@@ -1,5 +1,6 @@
 import os
 import psutil
+import platform
 from typing import Union
 from utils import print_title, print_bold_kv
 
@@ -28,7 +29,7 @@ def get_cpu_info() -> tuple[int, str, Union[str, int], str, str]:
         return cpu_nb, cpu_info, cpu_freq, cpu_cache, cpu_bogomips
     except IOError as exception:
         print(f"Error reading CPU info: {exception}")
-        return 0, '', '', '', ''
+        return 0, 'UNKNOWN', '0', 'UNKNOWN', 'UNKNOWN'
 
 
 def get_cpu_usage() -> float:
@@ -62,8 +63,8 @@ def get_process_count() -> int:
     """
     try:
         return len(psutil.pids())
-    except psutil.Error as e:
-        print(f"Error reading process count: {e}")
+    except psutil.Error as exception:
+        print(f"Error reading process count: {exception}")
         return 0
 
 def get_system_temperature() -> tuple[str, bool]:
@@ -73,6 +74,10 @@ def get_system_temperature() -> tuple[str, bool]:
     Returns:
     tuple: A tuple containing the CPU temperature and a boolean indicating whether the temperature could be fetched.
     """
+    os_type = platform.system()
+    if os_type != 'Linux':
+        return f"Temperature check only supported on Linux. Current OS: {os_type}", False
+
     try:
         temps = psutil.sensors_temperatures()
         if 'coretemp' in temps:
@@ -84,6 +89,7 @@ def get_system_temperature() -> tuple[str, bool]:
     except psutil.Error as exception:
         print(f"Error reading system temperature: {exception}")
         return "Unable to get system temperature.", False
+
 
 def print_cpu_info() -> None:
     """
@@ -98,7 +104,7 @@ def print_cpu_info() -> None:
     print_bold_kv("Bogomips", cpu_bogomips)
     print_bold_kv("CPU Usage", f"{get_cpu_usage()}%")
 
-    cpu_temp, status = get_system_temperature()
+    cpu_temp, _ = get_system_temperature() # replaced status with _
     print_bold_kv("CPU Temperature", cpu_temp)
 
     process_count = get_process_count()
