@@ -4,7 +4,7 @@ import time
 import os
 from utils import print_title, print_bold_kv
 
-def get_system_info() -> tuple[str, str, str | None, str, str, str, str, str, int, str]:
+def get_system_info() -> tuple[str, str, str | None, str, str, str, str, str, int, str]|None:
     """
     Retrieves various system information.
 
@@ -31,8 +31,8 @@ def get_system_info() -> tuple[str, str, str | None, str, str, str, str, str, in
     try:
         uptime_seconds = time.time() - os.stat("/proc/1").st_ctime
         last_boot_date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.stat("/proc/1").st_ctime))
-    except FileNotFoundError as e:
-        print(f"/proc/1 file not found. Error: {e}")
+    except FileNotFoundError as exception:
+        print(f"/proc/1 file not found. Error: {exception}")
         return
 
     days, rem = divmod(uptime_seconds, 86400)
@@ -42,8 +42,8 @@ def get_system_info() -> tuple[str, str, str | None, str, str, str, str, str, in
 
     try:
         users_nb = len(os.listdir('/home'))
-    except FileNotFoundError as e:
-        print(f"/home directory not found. Error: {e}")
+    except FileNotFoundError as exception:
+        print(f"/home directory not found. Error: {exception}")
         return
 
     current_date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
@@ -57,8 +57,8 @@ def print_system_info() -> None:
 
     try:
         os_type, dist, dist_version, hostname, uptime, last_boot_date, kernel_info, architecture, users_nb, current_date = get_system_info()
-    except TypeError as e:
-        print(f"Could not get system info. Error: {e}")
+    except TypeError as exception:
+        print(f"Could not get system info. Error: {exception}")
         return
 
     print_bold_kv('Hostname', hostname)

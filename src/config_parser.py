@@ -54,18 +54,7 @@
 
 # move exception handling to classes version 2
 import yaml
-
-class ConfigFileNotFoundException(Exception):
-    """Raised when the config file is not found"""
-    pass
-
-class YAMLParseError(Exception):
-    """Raised when there's an error parsing the YAML file"""
-    pass
-
-class UnexpectedError(Exception):
-    """Raised when an unexpected error occurs"""
-    pass
+from exceptions import ConfigFileNotFoundException, YAMLParseError, UnexpectedError
 
 def parse_config_file(yaml_file: str) -> dict|None:
     """Parse the configuration file and return the content as a Python dictionary.

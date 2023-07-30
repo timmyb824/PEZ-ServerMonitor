@@ -1,8 +1,10 @@
 import math
+import yaml
 from tabulate import tabulate
 from ping3 import ping, verbose_ping
 from utils import print_title, print_bold_kv
-from config_parser import parse_config_file, ConfigFileNotFoundException, YAMLParseError, UnexpectedError
+from config_parser import parse_config_file
+from exceptions import ConfigFileNotFoundException, YAMLParseError, UnexpectedError
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def check_ping(host: str) -> str:
@@ -24,6 +26,7 @@ def check_ping(host: str) -> str:
     except Exception as exception:
         return f"Error: {exception}"
 
+
 def calculate_average_latency(ping_results: list) -> float:
     """
     Calculates the average latency from a list of results.
@@ -34,13 +37,11 @@ def calculate_average_latency(ping_results: list) -> float:
     Returns:
         float: The average latency.
     """
-    count = len(ping_results)
+    successful_pings = [float(delay.replace(" ms", "")) for host, delay in ping_results if delay != "Timed Out"]
+    count = len(successful_pings)
 
-    total_latency = sum(
-        float(delay.replace(" ms", ""))
-        for host, delay in ping_results
-        if delay != "Timed Out"
-    )
+    total_latency = sum(successful_pings)
+
     avg_latency = total_latency / count if count != 0 else float('NaN')
     return round(avg_latency, 2)
 
@@ -94,11 +95,17 @@ def print_latency_info(config_file: str) -> None:
         print("Error: config yaml not found.")
         return
     except ConfigFileNotFoundException as exception:
-        print("Error: config yaml not found.")
+        print(f"Error: {exception}")
         return
-    except YAMLParseError:
+    except yaml.YAMLError:
         print("Error: Failed to parse config yaml.")
         return
+    except YAMLParseError as exception:
+        print(f"Error: {exception}")
+        return
     except UnexpectedError as exception:
+        print(f"Unexpected error: {exception}")
+        return
+    except Exception as exception:
         print(f"Unexpected error: {exception}")
         return

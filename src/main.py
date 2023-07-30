@@ -1,13 +1,13 @@
 import argparse
-from cpu_info import print_cpu_info
-from disk_info import print_disk_info
-from mem_info import print_memory_info
-from network_info import print_network_info
-from latency_info import print_latency_info
-from services_info import print_process_info
-from system_info import print_system_info
-from container_info import print_running_containers
-from processes_info import print_memory_usage_info, print_cpu_usage_info
+from cpu import print_cpu_info
+from disks import print_disk_info
+from memory import print_memory_info
+from networking import print_network_info
+from latency import print_latency_info
+from services import print_process_info
+from system import print_system_info
+from containers import print_running_containers
+from processes import print_memory_usage_info, print_cpu_usage_info
 from constants import ROOT_DIR
 
 def parse_args():

@@ -1,8 +1,10 @@
+import contextlib
 import subprocess
 import re
 from tabulate import tabulate
 from typing import Optional
 from utils import print_title
+from exceptions import CommandNotFoundError
 
 def check_if_installed(command: str) -> bool:
     """
@@ -17,14 +19,15 @@ def check_if_installed(command: str) -> bool:
     try:
         subprocess.run([command, '--version'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return True
-    except FileNotFoundError:
+    except FileNotFoundError as exception:
+        raise CommandNotFoundError(f"Command '{command}' not found in the system's PATH.") from exception
+    except subprocess.CalledProcessError as exception:
+        print(f"Error running {command}: {str(exception)}")
         return False
-    except subprocess.CalledProcessError as e:
-        print(f"Error running {command}: {str(e)}")
+    except Exception as exception:
+        print(f"Unexpected error: {exception}")
         return False
-    except Exception as e:
-        print(f"Unexpected error: {str(e)}")
-        return False
+
 
 # For checking docker or podman
 def check_docker_or_podman() -> Optional[str]:
@@ -35,13 +38,14 @@ def check_docker_or_podman() -> Optional[str]:
     str: "docker" if Docker is installed, "podman" if Podman is installed.
     None: If neither Docker nor Podman is installed.
     """
-    if check_if_installed('docker'):
-        return 'docker'
-    elif check_if_installed('podman'):
-        return 'podman'
-    else:
-        print("Neither Docker nor Podman is installed on your system.")
-        return None
+    with contextlib.suppress(CommandNotFoundError):
+        if check_if_installed('docker'):
+            return 'docker'
+    with contextlib.suppress(CommandNotFoundError):
+        if check_if_installed('podman'):
+            return 'podman'
+    # print("Neither Docker nor Podman is installed on your system.")
+    return None
 
 def get_running_containers(command: str) -> Optional[list[list[str]]]:
     """
@@ -79,7 +83,7 @@ def get_running_containers(command: str) -> Optional[list[list[str]]]:
         print(f"Error running {command} ps: {str(exception)}")
         return None
     except Exception as exception:
-        print(f"Unexpected error: {str(exception)}")
+        print(f"Unexpected error: {exception}")
         return None
 
 
@@ -87,11 +91,13 @@ def print_running_containers() -> None:
     """
     Prints the running Docker or Podman containers on the system.
     """
+    print_title("Container Information")
     if container_tool := check_docker_or_podman():
         containers = get_running_containers(container_tool)
         if containers is not None:
-            print_title("Containers Information")
             print(f"{container_tool.capitalize()} containers running on your system:")
             print(tabulate(containers, headers=["ID", "Names", "PortMappings", "Status"], tablefmt="simple_grid"))
         else:
             print("Error retrieving running containers.")
+    else:
+        print("Neither Docker nor Podman is installed on your system.")
