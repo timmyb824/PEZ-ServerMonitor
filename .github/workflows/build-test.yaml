@@ -5,6 +5,8 @@ on:
 
 jobs:
   build-and-test:
+    environment:
+      name: production
     runs-on: ubuntu-latest
     name: Build and Test
     # env:
@@ -48,7 +50,7 @@ jobs:
         run: |
           poetry run python -m pytest -xvvv tests/
 
-      - name: Run tool
+      - name: Test run the tool
         if: success()
         shell: bash
         run: |
