@@ -18,7 +18,7 @@ ignore-pre-commit:
 	@echo "Ignoring pre-commit"
 	git commit --no-verify -m "$(msg)"
 
-add-dependencies:
+add-deps:
 	@echo "Adding dependencies: $(pkg)"
 	poetry add $(pkg)
-	pip freeze > requirements.txt
+	pip-compile --resolver=backtracking -o requirements.txt pyproject.toml
