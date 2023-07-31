@@ -54,5 +54,4 @@ jobs:
         if: success()
         shell: bash
         run: |
-          cd src/
-          poetry run python main.py -a
+          poetry run python -m src/main.py -a
