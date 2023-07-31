@@ -1,27 +1,32 @@
-from unittest.mock import patch
-import pytest
 import socket
+from unittest.mock import patch
+
+import pytest
+
 from src.services import check_a_service, get_process_count, print_process_info
+
 
 def test_check_a_service():
     # Test for service up
-    with patch('socket.socket') as mock_socket:
+    with patch("socket.socket") as mock_socket:
         instance = mock_socket.return_value
         instance.connect_ex.return_value = 0
-        assert check_a_service(80, 'localhost')
+        assert check_a_service(80, "localhost")
 
         # Test for service down
         instance.connect_ex.return_value = 1
-        assert not check_a_service(80, 'localhost')
+        assert not check_a_service(80, "localhost")
 
         # Test for invalid host
-        instance.connect_ex.side_effect = socket.gaierror('Error')
-        assert not check_a_service(80, 'invalid')
+        instance.connect_ex.side_effect = socket.gaierror("Error")
+        assert not check_a_service(80, "invalid")
+
 
 def test_get_process_count():
-    with patch('psutil.pids') as mock_pids:
+    with patch("psutil.pids") as mock_pids:
         mock_pids.return_value = [1, 2, 3, 4, 5]
         assert get_process_count() == 5
+
 
 # @patch('services.print_title')
 # @patch('services.parse_config_file')

@@ -1,11 +1,18 @@
-from unittest.mock import patch, Mock, call
-from src.processes import get_processes, rearrange_order, print_memory_usage_info, print_cpu_usage_info
+from unittest.mock import Mock, call, patch
 
-@patch('psutil.process_iter')
-@patch('time.sleep')  # we patch sleep to avoid waiting during tests
+from src.processes import (
+    get_processes,
+    print_cpu_usage_info,
+    print_memory_usage_info,
+    rearrange_order,
+)
+
+
+@patch("psutil.process_iter")
+@patch("time.sleep")  # we patch sleep to avoid waiting during tests
 def test_get_processes(mock_sleep, mock_process_iter):
     process = Mock()
-    process.info = {'pid': 123, 'name': 'test', 'memory_percent': 1.5}
+    process.info = {"pid": 123, "name": "test", "memory_percent": 1.5}
     process.cpu_percent.return_value = 0.5
     mock_process_iter.return_value = [process]
 
@@ -14,12 +21,22 @@ def test_get_processes(mock_sleep, mock_process_iter):
     # Verify the sleep was called to allow cpu_percent to update
     mock_sleep.assert_called_once_with(1)
 
-    assert top_memory == top_cpu == [{'pid': 123, 'name': 'test', 'memory_percent': 1.5, 'cpu_percent': 0.5}]
+    assert (
+        top_memory
+        == top_cpu
+        == [{"pid": 123, "name": "test", "memory_percent": 1.5, "cpu_percent": 0.5}]
+    )
+
 
 def test_rearrange_order():
-    input_data = [{'memory_percent': 1.5, 'cpu_percent': 0.5, 'pid': 123, 'name': 'test'}]
-    expected_output = [{'pid': 123, 'name': 'test', 'cpu_percent': 0.5, 'memory_percent': 1.5}]
+    input_data = [
+        {"memory_percent": 1.5, "cpu_percent": 0.5, "pid": 123, "name": "test"}
+    ]
+    expected_output = [
+        {"pid": 123, "name": "test", "cpu_percent": 0.5, "memory_percent": 1.5}
+    ]
     assert rearrange_order(input_data) == expected_output
+
 
 # @patch('processes.get_processes')
 # @patch('processes.rearrange_order', side_effect=lambda x: x)  # just return the same value

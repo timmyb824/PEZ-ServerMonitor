@@ -1,10 +1,13 @@
 import contextlib
-import subprocess
 import re
-from tabulate import tabulate
+import subprocess
 from typing import Optional
-from utils import print_title
-from exceptions import CommandNotFoundError
+
+from tabulate import tabulate
+
+from src.exceptions import CommandNotFoundError
+from src.utils import print_title
+
 
 def check_if_installed(command: str) -> bool:
     """
@@ -17,10 +20,17 @@ def check_if_installed(command: str) -> bool:
     bool: True if the command is installed, False otherwise.
     """
     try:
-        subprocess.run([command, '--version'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(
+            [command, "--version"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         return True
     except FileNotFoundError as exception:
-        raise CommandNotFoundError(f"Command '{command}' not found in the system's PATH.") from exception
+        raise CommandNotFoundError(
+            f"Command '{command}' not found in the system's PATH."
+        ) from exception
     except subprocess.CalledProcessError as exception:
         print(f"Error running {command}: {str(exception)}")
         return False
@@ -39,13 +49,14 @@ def check_docker_or_podman() -> Optional[str]:
     None: If neither Docker nor Podman is installed.
     """
     with contextlib.suppress(CommandNotFoundError):
-        if check_if_installed('docker'):
-            return 'docker'
+        if check_if_installed("docker"):
+            return "docker"
     with contextlib.suppress(CommandNotFoundError):
-        if check_if_installed('podman'):
-            return 'podman'
+        if check_if_installed("podman"):
+            return "podman"
     # print("Neither Docker nor Podman is installed on your system.")
     return None
+
 
 def get_running_containers(command: str) -> Optional[list[list[str]]]:
     """
@@ -59,21 +70,33 @@ def get_running_containers(command: str) -> Optional[list[list[str]]]:
     None: If an error occurred while retrieving the containers.
     """
     try:
-        result = subprocess.run([command, 'ps', '--format', '{{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.RunningFor}}'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(
+            [
+                command,
+                "ps",
+                "--format",
+                "{{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.RunningFor}}",
+            ],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         # Convert the output into a list of lists
         output = result.stdout.decode().splitlines()
         containers = []
         for line in output:
-            split_line = re.split(r'\t|\s{2,}', line.strip())  # Split based on 2 or more spaces or a tab
+            split_line = re.split(
+                r"\t|\s{2,}", line.strip()
+            )  # Split based on 2 or more spaces or a tab
             # Manually assemble the fields
             cid = split_line[0]
             names = split_line[1]
-            if port_mappings := re.findall(r'(\d+)->(\d+)/tcp', split_line[2]):
+            if port_mappings := re.findall(r"(\d+)->(\d+)/tcp", split_line[2]):
                 # Only consider the first port mapping
                 source, target = port_mappings[0]
-                ports = f'{source}:{target}'
+                ports = f"{source}:{target}"
             else:
-                ports = 'N/A'
+                ports = "N/A"
             # The status field should be the last item in the split_line list
             status = split_line[-1]
             # Append the fields as a list to the containers list
@@ -96,7 +119,13 @@ def print_running_containers() -> None:
         containers = get_running_containers(container_tool)
         if containers is not None:
             print(f"{container_tool.capitalize()} containers running on your system:")
-            print(tabulate(containers, headers=["ID", "Names", "PortMappings", "Status"], tablefmt="simple_grid"))
+            print(
+                tabulate(
+                    containers,
+                    headers=["ID", "Names", "PortMappings", "Status"],
+                    tablefmt="simple_grid",
+                )
+            )
         else:
             print("Error retrieving running containers.")
     else:

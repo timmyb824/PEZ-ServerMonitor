@@ -1,7 +1,10 @@
+import time
+
 import psutil
 from tabulate import tabulate
-from utils import bold
-import time
+
+from src.utils import bold
+
 
 def get_processes():
     """
@@ -12,29 +15,34 @@ def get_processes():
     """
     processes = []
 
-    for process in psutil.process_iter(['pid', 'name', 'memory_percent']):
+    for process in psutil.process_iter(["pid", "name", "memory_percent"]):
         try:
             process.cpu_percent(None)  # initiate cpu_percent with None
         except psutil.AccessDenied:
             continue
+        except psutil.ZombieProcess:
+            continue
 
     time.sleep(1)  # sleep for a while to let cpu_percent update
 
-    for process in psutil.process_iter(['pid', 'name', 'memory_percent']):
+    for process in psutil.process_iter(["pid", "name", "memory_percent"]):
         try:
             cpu_percent = process.cpu_percent(None)
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue  # process may have ended, move on to next process
 
         process_info = process.info
-        process_info['cpu_percent'] = cpu_percent
+        process_info["cpu_percent"] = cpu_percent
         processes.append(process_info)
 
     # Sort processes by Memory Usage and CPU Usage
-    sorted_by_memory = sorted(processes, key=lambda x: x['memory_percent'], reverse=True)[:5]
-    sorted_by_cpu = sorted(processes, key=lambda x: x['cpu_percent'], reverse=True)[:5]
+    sorted_by_memory = sorted(
+        processes, key=lambda x: x["memory_percent"], reverse=True
+    )[:5]
+    sorted_by_cpu = sorted(processes, key=lambda x: x["cpu_percent"], reverse=True)[:5]
 
     return sorted_by_memory, sorted_by_cpu
+
 
 def rearrange_order(process_list):
     """
@@ -46,7 +54,11 @@ def rearrange_order(process_list):
     Returns:
         list[dict]: List of process details in dictionary format with keys rearranged.
     """
-    return [{k: process[k] for k in ['pid', 'name', 'cpu_percent', 'memory_percent']} for process in process_list]
+    return [
+        {k: process[k] for k in ["pid", "name", "cpu_percent", "memory_percent"]}
+        for process in process_list
+    ]
+
 
 def print_memory_usage_info():
     """
@@ -60,6 +72,7 @@ def print_memory_usage_info():
     # printing top 5 processes by memory usage
     print(bold("\nTop 5 Processes by Memory Usage:"))
     print(tabulate(top_5_memory, headers="keys", tablefmt="simple_grid"))
+
 
 def print_cpu_usage_info():
     """
