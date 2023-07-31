@@ -22,7 +22,7 @@ jobs:
       - name: Install poetry
         shell: bash
         run: |
-          python -m pip install poetry==1.4.0
+          python -m pip install poetry==1.5.1
 
       - name: Configure poetry
         shell: bash
@@ -54,4 +54,5 @@ jobs:
         if: success()
         shell: bash
         run: |
+          cat pyproject.toml
           python -m poetry run python src/main.py -a
