@@ -54,5 +54,4 @@ jobs:
         if: success()
         shell: bash
         run: |
-          export PYTHONPATH="${PYTHONPATH}:./src"
           python -m poetry run python src/main.py -a

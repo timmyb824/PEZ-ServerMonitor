@@ -127,8 +127,10 @@ def get_system_temperature() -> tuple[str, bool]:
                 if item.label == "Package id 0":
                     return f"{item.current}°C", True
         return "Unable to get system temperature.", False
-    except psutil.Error as exception:
-        print(f"Error reading system temperature: {exception}")
+    except psutil.Error:
+        # print(f"Error reading system temperature: {exception}")
+        return "Unable to get system temperature.", False
+    except Exception:
         return "Unable to get system temperature.", False
 
 
