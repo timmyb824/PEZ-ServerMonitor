@@ -13,5 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# export env
+ENV PYTHONPATH "${PYTHONPATH}:/app/src"
+
 # Set the command to run your project
 CMD [ "python", "./src/main.py", "-a" ]

@@ -49,7 +49,9 @@ def get_cpu_info() -> tuple[int, str, Union[float, Literal["Unknown"]], str, str
     try:
         cpu_nb = psutil.cpu_count() or 0  # if psutil.cpu_count() is not None else 0
         cpu_info = platform.processor() or "UNKNOWN"
-        cpu_freq = psutil.cpu_freq().max or 0  # if psutil.cpu_freq() is not None else 0
+        # cpu_freq = psutil.cpu_freq().max or 0  # if psutil.cpu_freq() is not None else 0
+        cpu_freq_info = psutil.cpu_freq()
+        cpu_freq = cpu_freq_info.max if cpu_freq_info is not None else 0
 
         # cache size and bogomips are not available via psutil so we need to get them from files
         cpu_cache, cpu_bogomips = get_cpu_cache_and_bogomips()
@@ -57,10 +59,10 @@ def get_cpu_info() -> tuple[int, str, Union[float, Literal["Unknown"]], str, str
         # cpu_bogomips = 'UNKNOWN'
 
         return cpu_nb, cpu_info, cpu_freq, cpu_cache, cpu_bogomips
-    except psutil.Error as exception:
+    except psutil.Error:
         # print(f"Error reading CPU info: {exception}")
         return 0, "UNKNOWN", 0, "UNKNOWN", "UNKNOWN"
-    except FileNotFoundError as exception:
+    except FileNotFoundError:
         # print(f"Error reading CPU info: {exception}")
         return 0, "UNKNOWN", 0, "UNKNOWN", "UNKNOWN"
 

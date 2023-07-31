@@ -31,11 +31,11 @@ def check_if_installed(command: str) -> bool:
         raise CommandNotFoundError(
             f"Command '{command}' not found in the system's PATH."
         ) from exception
-    except subprocess.CalledProcessError as exception:
-        print(f"Error running {command}: {str(exception)}")
+    except subprocess.CalledProcessError:
+        # print(f"Error running {command}: {str(exception)}")
         return False
-    except Exception as exception:
-        print(f"Unexpected error: {exception}")
+    except Exception:
+        # print(f"Unexpected error: {exception}")
         return False
 
 
@@ -102,11 +102,11 @@ def get_running_containers(command: str) -> Optional[list[list[str]]]:
             # Append the fields as a list to the containers list
             containers.append([cid, names, ports, status])
         return containers
-    except subprocess.CalledProcessError as exception:
-        print(f"Error running {command} ps: {str(exception)}")
+    except subprocess.CalledProcessError:
+        # print(f"Error running {command} ps: {str(exception)}")
         return None
-    except Exception as exception:
-        print(f"Unexpected error: {exception}")
+    except Exception:
+        # print(f"Unexpected error: {exception}")
         return None
 
 

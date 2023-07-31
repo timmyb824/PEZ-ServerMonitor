@@ -54,5 +54,5 @@ jobs:
         if: success()
         shell: bash
         run: |
-          cat pyproject.toml
+          export PYTHONPATH="${PYTHONPATH}:./src"
           python -m poetry run python src/main.py -a
