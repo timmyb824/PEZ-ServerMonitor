@@ -145,48 +145,56 @@
 
 import pytest
 import yaml
-from src.config_parser import parse_config_file, ConfigFileNotFoundException, YAMLParseError, UnexpectedError
+
+from src.config_parser import (
+    ConfigFileNotFoundException,
+    UnexpectedError,
+    YAMLParseError,
+    parse_config_file,
+)
 
 
 def test_parse_config_file_success(tmpdir):
     # Create a temporary YAML file for testing
     file_path = tmpdir.join("config.yaml")
     config_dict = {
-        'services': [{'name': 'Test Service', 'port': 1234, 'host': 'localhost'}],
-        'ping_hosts': ['localhost']
+        "services": [{"name": "Test Service", "port": 1234, "host": "localhost"}],
+        "ping_hosts": ["localhost"],
     }
-    with open(file_path, 'w') as f:
+    with open(file_path, "w") as f:
         yaml.dump(config_dict, f)
 
     # Ensure parse_config_file successfully parses the file
     assert parse_config_file(file_path) == config_dict
 
+
 def test_parse_config_file_file_not_found():
     with pytest.raises(ConfigFileNotFoundException):
-        parse_config_file('nonexistent.yaml')
+        parse_config_file("nonexistent.yaml")
+
 
 def test_parse_config_file_yaml_error(tmpdir):
     # Create a temporary file that is not a valid YAML
     file_path = tmpdir.join("config.yaml")
-    with open(file_path, 'w') as f:
+    with open(file_path, "w") as f:
         f.write("{ unbalanced braces")
 
     with pytest.raises(YAMLParseError):
         parse_config_file(file_path)
 
+
 def test_parse_config_file_unexpected_error(mocker, tmpdir):
     # Create a valid temporary YAML file for testing
     file_path = tmpdir.join("config.yaml")
     config_dict = {
-        'services': [{'name': 'Test Service', 'port': 1234, 'host': 'localhost'}],
-        'ping_hosts': ['localhost']
+        "services": [{"name": "Test Service", "port": 1234, "host": "localhost"}],
+        "ping_hosts": ["localhost"],
     }
-    with open(file_path, 'w') as f:
+    with open(file_path, "w") as f:
         yaml.dump(config_dict, f)
 
     # Mock yaml.safe_load to raise an Exception
-    mocker.patch('yaml.safe_load', side_effect=Exception("Unexpected!"))
+    mocker.patch("yaml.safe_load", side_effect=Exception("Unexpected!"))
 
     with pytest.raises(UnexpectedError):
         parse_config_file(file_path)
-

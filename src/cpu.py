@@ -1,9 +1,45 @@
 import os
-import psutil
-from typing import Union
-from utils import print_title, print_bold_kv
+import platform
+from typing import Literal, Union
 
-def get_cpu_info() -> tuple[int, str, Union[str, int], str, str]:
+import psutil
+
+from src.utils import print_bold_kv, print_title
+
+
+def get_cpu_cache_and_bogomips() -> tuple[str, str]:
+    """
+    Tries to get cpu_cache and cpu_bogomips from /proc/cpuinfo and
+    if it fails, then return 'UNKNOWN'.
+
+    Returns:
+    tuple: A tuple containing cpu_cache and cpu_bogomips.
+    """
+    try:
+        with open("/proc/cpuinfo", encoding="UTF-8") as f:
+            cpuinfo = f.readlines()
+
+        cpu_cache = next(
+            line.split(": ")[1].strip()
+            for line in cpuinfo
+            if line.startswith("cache size")
+        )
+        cpu_bogomips = next(
+            line.split(": ")[1].strip()
+            for line in cpuinfo
+            if line.startswith("bogomips")
+        )
+
+        return cpu_cache, cpu_bogomips
+    except IOError:
+        # print(f"Error reading CPU cache size and bogomips: {exception}")
+        return "UNKNOWN", "UNKNOWN"
+    except Exception:
+        # print(f"Error reading CPU cache size and bogomips: {exception}")
+        return "UNKNOWN", "UNKNOWN"
+
+
+def get_cpu_info() -> tuple[int, str, Union[float, Literal["Unknown"]], str, str]:
     """
     Gets CPU information.
 
@@ -11,24 +47,24 @@ def get_cpu_info() -> tuple[int, str, Union[str, int], str, str]:
     tuple: A tuple containing the number of CPUs, CPU info, frequency, cache size, and bogomips.
     """
     try:
-        with open('/proc/cpuinfo') as f:
-            cpuinfo = f.readlines()
+        cpu_nb = psutil.cpu_count() or 0  # if psutil.cpu_count() is not None else 0
+        cpu_info = platform.processor() or "UNKNOWN"
+        # cpu_freq = psutil.cpu_freq().max or 0  # if psutil.cpu_freq() is not None else 0
+        cpu_freq_info = psutil.cpu_freq()
+        cpu_freq = cpu_freq_info.max if cpu_freq_info is not None else 0
 
-        cpu_nb = len([line for line in cpuinfo if line.startswith('processor')])
-        cpu_info = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('model name'))
-        cpu_freq = next((line.split(': ')[1].strip() for line in cpuinfo if line.startswith('cpu MHz')), None)
-
-        if cpu_freq is None:
-            with open('/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq', "r", encoding="UTF-8") as f:
-                cpu_freq = int(f.read().strip()) // 1000
-
-        cpu_cache = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('cache size'))
-        cpu_bogomips = next(line.split(': ')[1].strip() for line in cpuinfo if line.startswith('bogomips'))
+        # cache size and bogomips are not available via psutil so we need to get them from files
+        cpu_cache, cpu_bogomips = get_cpu_cache_and_bogomips()
+        # cpu_cache = 'UNKNOWN'
+        # cpu_bogomips = 'UNKNOWN'
 
         return cpu_nb, cpu_info, cpu_freq, cpu_cache, cpu_bogomips
-    except IOError as exception:
-        print(f"Error reading CPU info: {exception}")
-        return 0, '', '', '', ''
+    except psutil.Error:
+        # print(f"Error reading CPU info: {exception}")
+        return 0, "UNKNOWN", 0, "UNKNOWN", "UNKNOWN"
+    except FileNotFoundError:
+        # print(f"Error reading CPU info: {exception}")
+        return 0, "UNKNOWN", 0, "UNKNOWN", "UNKNOWN"
 
 
 def get_cpu_usage() -> float:
@@ -44,6 +80,7 @@ def get_cpu_usage() -> float:
         print(f"Error reading CPU usage: {exception}")
         return 0.0
 
+
 def get_load_average() -> tuple[float, float, float]:
     """
     Gets the system's load average.
@@ -52,6 +89,7 @@ def get_load_average() -> tuple[float, float, float]:
     tuple: A tuple containing the 1, 5, and 15 minute load averages.
     """
     return os.getloadavg()
+
 
 def get_process_count() -> int:
     """
@@ -62,9 +100,10 @@ def get_process_count() -> int:
     """
     try:
         return len(psutil.pids())
-    except psutil.Error as e:
-        print(f"Error reading process count: {e}")
+    except psutil.Error as exception:
+        print(f"Error reading process count: {exception}")
         return 0
+
 
 def get_system_temperature() -> tuple[str, bool]:
     """
@@ -73,32 +112,42 @@ def get_system_temperature() -> tuple[str, bool]:
     Returns:
     tuple: A tuple containing the CPU temperature and a boolean indicating whether the temperature could be fetched.
     """
+    os_type = platform.system()
+    if os_type != "Linux":
+        return (
+            f"Temperature check only supported on Linux. Current OS: {os_type}",
+            False,
+        )
+
     try:
         temps = psutil.sensors_temperatures()
-        if 'coretemp' in temps:
-            cputemp = temps['coretemp']
+        if "coretemp" in temps:
+            cputemp = temps["coretemp"]
             for item in cputemp:
-                if item.label == 'Package id 0':
+                if item.label == "Package id 0":
                     return f"{item.current}°C", True
         return "Unable to get system temperature.", False
-    except psutil.Error as exception:
-        print(f"Error reading system temperature: {exception}")
+    except psutil.Error:
+        # print(f"Error reading system temperature: {exception}")
         return "Unable to get system temperature.", False
+    except Exception:
+        return "Unable to get system temperature.", False
+
 
 def print_cpu_info() -> None:
     """
     Prints the CPU information, CPU usage, load average, and system temperature.
     """
     cpu_nb, cpu_info, cpu_freq, cpu_cache, cpu_bogomips = get_cpu_info()
-    print_title('CPU Information')
-    print_bold_kv('Number', str(cpu_nb))
-    print_bold_kv('Model', cpu_info)
+    print_title("CPU Information")
+    print_bold_kv("Number", str(cpu_nb))
+    print_bold_kv("Model", cpu_info)
     print_bold_kv("Frequency", f"{cpu_freq} MHz")
     print_bold_kv("Cache L2", cpu_cache)
     print_bold_kv("Bogomips", cpu_bogomips)
     print_bold_kv("CPU Usage", f"{get_cpu_usage()}%")
 
-    cpu_temp, status = get_system_temperature()
+    cpu_temp, _ = get_system_temperature()  # replaced status with _
     print_bold_kv("CPU Temperature", cpu_temp)
 
     process_count = get_process_count()

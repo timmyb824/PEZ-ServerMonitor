@@ -1,7 +1,11 @@
 from tabulate import tabulate
-from utils import print_title
 
-def calculate_memory_usage(total: int, free: int, buffers: int, cached: int) -> tuple[int, int, float]:
+from src.utils import print_title
+
+
+def calculate_memory_usage(
+    total: int, free: int, buffers: int, cached: int
+) -> tuple[int, int, float]:
     """
     Calculate the total, free, and used percentage for memory or swap.
 
@@ -20,7 +24,9 @@ def calculate_memory_usage(total: int, free: int, buffers: int, cached: int) -> 
 
     return total, free, used_percentage
 
+
 # In your get_memory_info function:
+
 
 def get_memory_info() -> tuple[int, int, float, int, int, float]:
     """
@@ -32,27 +38,37 @@ def get_memory_info() -> tuple[int, int, float, int, int, float]:
     """
     try:
         mem_info = {
-            i.split()[0].rstrip(':'): int(i.split()[1])
-            for i in open('/proc/meminfo').readlines()
+            i.split()[0].rstrip(":"): int(i.split()[1])
+            for i in open("/proc/meminfo").readlines()
         }
-    except (FileNotFoundError, PermissionError) as e:
-        print(f"Error reading file '/proc/meminfo': {e}")
+    except (FileNotFoundError, PermissionError):
+        # print(f"Error reading file '/proc/meminfo': {exception}")
         return (0, 0, 0, 0, 0, 0)
 
-    keys = ['MemTotal', 'MemFree', 'Buffers', 'Cached', 'SwapTotal', 'SwapFree']
+    keys = ["MemTotal", "MemFree", "Buffers", "Cached", "SwapTotal", "SwapFree"]
     if any(key not in mem_info for key in keys):
         print("Not all keys found in '/proc/meminfo'")
         return (0, 0, 0, 0, 0, 0)
 
     mem_total, mem_free, mem_used_percentage = calculate_memory_usage(
-        mem_info['MemTotal'], mem_info['MemFree'], mem_info['Buffers'], mem_info['Cached']
+        mem_info["MemTotal"],
+        mem_info["MemFree"],
+        mem_info["Buffers"],
+        mem_info["Cached"],
     )
 
     swap_total, swap_free, swap_used_percentage = calculate_memory_usage(
-        mem_info['SwapTotal'], mem_info['SwapFree'], 0, 0
+        mem_info["SwapTotal"], mem_info["SwapFree"], 0, 0
     )
 
-    return mem_total, mem_free, mem_used_percentage, swap_total, swap_free, swap_used_percentage
+    return (
+        mem_total,
+        mem_free,
+        mem_used_percentage,
+        swap_total,
+        swap_free,
+        swap_used_percentage,
+    )
 
 
 def print_memory_info() -> None:
@@ -60,11 +76,18 @@ def print_memory_info() -> None:
     Print the memory information table
     """
     # Memory
-    mem_total, mem_free, mem_used_percentage, swap_total, swap_free, swap_used_percentage = get_memory_info()
+    (
+        mem_total,
+        mem_free,
+        mem_used_percentage,
+        swap_total,
+        swap_free,
+        swap_used_percentage,
+    ) = get_memory_info()
 
     table = [
-        ['Memory', f'{mem_free}MB', f'{mem_total}MB', f'{mem_used_percentage:.2f}%'],
-        ['Swap', f'{swap_free}MB', f'{swap_total}MB', f'{swap_used_percentage:.2f}%'],
+        ["Memory", f"{mem_free}MB", f"{mem_total}MB", f"{mem_used_percentage:.2f}%"],
+        ["Swap", f"{swap_free}MB", f"{swap_total}MB", f"{swap_used_percentage:.2f}%"],
     ]
 
     headers = ["Type", "Free", "Total", "Usage"]

@@ -1,26 +1,41 @@
 repos:
-- repo: https://github.com/sourcery-ai/sourcery
-  rev: v1.2.0
-  hooks:
-  - id: sourcery
+-   repo: https://github.com/sourcery-ai/sourcery
+    rev: v1.6.0
+    hooks:
+    - id: sourcery
     # The best way to use Sourcery in a pre-commit hook:
     # * review only changed lines:
     # * omit the summary
-    args: [--diff=git diff HEAD, --no-summary, src/]
+      args: [--diff=git diff HEAD, --no-summary, src/]
 
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.4.0
     hooks:
     -   id: check-yaml
         args: [--unsafe]
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+    -   id: check-added-large-files
+    -   id: check-ast
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-xml
+    -   id: debug-statements
+    -   id: requirements-txt-fixer
+    -   id: mixed-line-ending
+        args: ['--fix=auto']
 
 -   repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 23.7.0
     hooks:
     -   id: black
-        language_version: python3.11
+        language_version: python3
+
+-   repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+    -   id: isort
+        args: ["--profile", "black"]
 
 # Example of local hook
 # -   repo: local

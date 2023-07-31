@@ -1,14 +1,30 @@
 import argparse
-from cpu import print_cpu_info
-from disks import print_disk_info
-from memory import print_memory_info
-from networking import print_network_info
-from latency import print_latency_info
-from services import print_process_info
-from system import print_system_info
-from containers import print_running_containers
-from processes import print_memory_usage_info, print_cpu_usage_info
-from constants import ROOT_DIR
+import platform
+import time
+
+from src.constants import ROOT_DIR
+from src.containers import print_running_containers
+from src.cpu import print_cpu_info
+from src.disks import print_disk_info
+from src.latency import print_latency_info
+from src.memory import print_memory_info
+from src.networking import print_network_info
+from src.processes import print_cpu_usage_info, print_memory_usage_info
+from src.services import print_process_info
+from src.system import print_system_info
+from src.utils import print_title_red
+
+
+def check_os():
+    current_os = platform.system()
+    if current_os in ("Windows", "Darwin"):
+        print_title_red(
+            f"Your OS *{current_os}* is not fully supported at this time. Results may vary."
+        )
+        # print(f"Error: The current OS is {current_os}. This program is not supported on {current_os} at this time.")
+        # sys.exit(1)
+        time.sleep(2)
+
 
 def parse_args():
     """
@@ -17,18 +33,44 @@ def parse_args():
     Returns:
         Namespace: Parsed command-line arguments.
     """
-    parser = argparse.ArgumentParser(description='System information tool.')
-    parser.add_argument('-a', '--all', action='store_true', help='Show all information')
-    parser.add_argument('-s', '--system', action='store_true', help='Show only system information')
-    parser.add_argument('-c', '--cpu', action='store_true', help='Show only CPU information')
-    parser.add_argument('-m', '--memory', action='store_true', help='Show only memory information')
-    parser.add_argument('-d', '--disk', action='store_true', help='Show only disk information')
-    parser.add_argument('-n', '--network', action='store_true', help='Show only network and latency information')
-    parser.add_argument('-ps', '--processes', action='store_true', help='Show only services information')
-    parser.add_argument('-dp', '--containers', action='store_true', help='Show only container (docker or podman) information')
-    parser.add_argument('-cf', '--config', default=f"{ROOT_DIR}/config.yaml", help='The path to the config file')
+    parser = argparse.ArgumentParser(description="System information tool.")
+    parser.add_argument("-a", "--all", action="store_true", help="Show all information")
+    parser.add_argument(
+        "-s", "--system", action="store_true", help="Show only system information"
+    )
+    parser.add_argument(
+        "-c", "--cpu", action="store_true", help="Show only CPU information"
+    )
+    parser.add_argument(
+        "-m", "--memory", action="store_true", help="Show only memory information"
+    )
+    parser.add_argument(
+        "-d", "--disk", action="store_true", help="Show only disk information"
+    )
+    parser.add_argument(
+        "-n",
+        "--network",
+        action="store_true",
+        help="Show only network and latency information",
+    )
+    parser.add_argument(
+        "-ps", "--processes", action="store_true", help="Show only services information"
+    )
+    parser.add_argument(
+        "-dp",
+        "--containers",
+        action="store_true",
+        help="Show only container (docker or podman) information",
+    )
+    parser.add_argument(
+        "-cf",
+        "--config",
+        default=f"{ROOT_DIR}/config.yaml",
+        help="The path to the config file",
+    )
 
     return parser.parse_args()
+
 
 def main(args) -> None:
     """
@@ -38,7 +80,6 @@ def main(args) -> None:
         args (Namespace): Parsed command-line arguments.
     """
     try:
-
         # Parse config file (default config is used if no config file is provided)
         config_file = args.config
 
@@ -67,6 +108,7 @@ def main(args) -> None:
     except Exception as exception:
         print(f"An error occurred: {exception}")
 
+
 def print_all_info(config_file: str):
     """
     Prints all system-related information.
@@ -85,6 +127,8 @@ def print_all_info(config_file: str):
     print_process_info(config_file)
     print_running_containers()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
+    check_os()
     args = parse_args()
     main(args)

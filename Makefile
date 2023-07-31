@@ -17,3 +17,8 @@ run-coverage-report:
 ignore-pre-commit:
 	@echo "Ignoring pre-commit"
 	git commit --no-verify -m "$(msg)"
+
+add-deps:
+	@echo "Adding dependencies: $(pkg)"
+	poetry add $(pkg)
+	pip-compile --resolver=backtracking -o requirements.txt pyproject.toml

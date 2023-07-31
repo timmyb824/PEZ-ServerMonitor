@@ -1,6 +1,9 @@
+from unittest.mock import mock_open, patch
+
 import pytest
-from unittest.mock import patch, mock_open
+
 from src.memory import calculate_memory_usage, get_memory_info, print_memory_info
+
 
 def test_calculate_memory_usage():
     total, free, used_percentage = calculate_memory_usage(1024, 512, 256, 256)
@@ -13,9 +16,21 @@ def test_calculate_memory_usage():
     assert free == 1
     assert used_percentage == 50.0
 
-@patch('builtins.open', new_callable=mock_open, read_data='MemTotal: 8192 kB\nMemFree: 2048 kB\nBuffers: 1024 kB\nCached: 1024 kB\nSwapTotal: 8192 kB\nSwapFree: 4096 kB\n')
+
+@patch(
+    "builtins.open",
+    new_callable=mock_open,
+    read_data="MemTotal: 8192 kB\nMemFree: 2048 kB\nBuffers: 1024 kB\nCached: 1024 kB\nSwapTotal: 8192 kB\nSwapFree: 4096 kB\n",
+)
 def test_get_memory_info(mock_file):
-    mem_total, mem_free, mem_used_percentage, swap_total, swap_free, swap_used_percentage = get_memory_info()
+    (
+        mem_total,
+        mem_free,
+        mem_used_percentage,
+        swap_total,
+        swap_free,
+        swap_used_percentage,
+    ) = get_memory_info()
     assert mem_total == 8
     assert mem_free == 4
     assert mem_used_percentage == 50
@@ -23,15 +38,28 @@ def test_get_memory_info(mock_file):
     assert swap_free == 4
     assert swap_used_percentage == 50
 
-@patch('builtins.open', new_callable=mock_open, read_data='MemTotal: 8192 kB\nMemFree: 2048 kB\n')
+
+@patch(
+    "builtins.open",
+    new_callable=mock_open,
+    read_data="MemTotal: 8192 kB\nMemFree: 2048 kB\n",
+)
 def test_get_memory_info_missing_keys(mock_file):
-    mem_total, mem_free, mem_used_percentage, swap_total, swap_free, swap_used_percentage = get_memory_info()
+    (
+        mem_total,
+        mem_free,
+        mem_used_percentage,
+        swap_total,
+        swap_free,
+        swap_used_percentage,
+    ) = get_memory_info()
     assert mem_total == 0
     assert mem_free == 0
     assert mem_used_percentage == 0
     assert swap_total == 0
     assert swap_free == 0
     assert swap_used_percentage == 0
+
 
 # @patch('memory.get_memory_info')
 # @patch('utils.print_title')
