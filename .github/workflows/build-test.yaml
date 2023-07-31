@@ -55,4 +55,4 @@ jobs:
         shell: bash
         run: |
           cd src/
-          python -m poetry run python main.py -a
+          poetry run python main.py -a
