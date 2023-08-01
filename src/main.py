@@ -16,13 +16,12 @@ from src.utils import print_title_red
 
 
 def check_os():
+    """Checks if the OS is supported."""
     current_os = platform.system()
     if current_os in ("Windows", "Darwin"):
         print_title_red(
-            f"Your OS *{current_os}* is not fully supported at this time. Results may vary."
+            f"{current_os} OS is not fully supported yet. Results may vary."
         )
-        # print(f"Error: The current OS is {current_os}. This program is not supported on {current_os} at this time.")
-        # sys.exit(1)
         time.sleep(2)
 
 
@@ -57,10 +56,10 @@ def parse_args():
         "-ps", "--processes", action="store_true", help="Show only services information"
     )
     parser.add_argument(
-        "-dp",
+        "-ct",
         "--containers",
         action="store_true",
-        help="Show only container (docker or podman) information",
+        help="Show only running container (docker or podman) information",
     )
     parser.add_argument(
         "-cf",
@@ -72,18 +71,12 @@ def parse_args():
     return parser.parse_args()
 
 
-def main(args) -> None:
-    """
-    Main function which triggers based on the arguments provided.
-
-    Args:
-        args (Namespace): Parsed command-line arguments.
-    """
+def main() -> None:
+    """Main function."""
+    check_os()
+    args = parse_args()
     try:
-        # Parse config file (default config is used if no config file is provided)
         config_file = args.config
-
-        # All information
         if args.all:
             print_all_info(config_file)
         elif args.system:
@@ -129,6 +122,4 @@ def print_all_info(config_file: str):
 
 
 if __name__ == "__main__":
-    check_os()
-    args = parse_args()
-    main(args)
+    main()

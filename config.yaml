@@ -17,12 +17,6 @@ services:
   - name: PostgreSQL Server
     port: 5432
     host: localhost
-  - name: Zabbix-Agent
-    port: 10050
-    host: localhost
-  - name: Prometheus
-    port: 9090
-    host: localhost
 
 ping_hosts:
   - google.com

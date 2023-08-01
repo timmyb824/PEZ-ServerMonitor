@@ -4,9 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Timothy Bryant <timothybryant3@gmail.com>"]
 readme = "README.md"
-packages = [{include = "src"}]
-# packages = [ { include = "**/*.py", from = "."  }]
-classifiers = ["Private :: Do not Upload"]
+packages = [{include = "src", from = "."}]
+# classifiers = ["Private :: Do not Upload"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -39,3 +38,6 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = [
   ".", "src"
 ]
+
+[tool.poetry.scripts]
+pez-servermonitor = "src.main:main"
