@@ -25,7 +25,7 @@ def check_ping(host: str) -> str:
         if latency is None:
             return "Timed Out"
         latency *= 1000  # Convert seconds to milliseconds
-        return round(latency, 2)
+        return f"{round(latency, 2)} ms"
     except Exception as exception:
         return f"Error: {exception}"
 
@@ -72,11 +72,11 @@ def perform_ping(ping_hosts: list) -> list:
             host = future_to_host[future]
             try:
                 ping_time = future.result()
-            except Exception as exc:
-                print("%r generated an exception: %s" % (host, exc))
+            except Exception as exception:
+                print(f"{host} generated an exception: {exception}")
             else:
                 if ping_time != "Timed Out":
-                    ping_results.append([host, f"{ping_time} ms"])
+                    ping_results.append([host, f"{ping_time}"])
                 else:
                     ping_results.append([host, ping_time])
     return ping_results

@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "PEZ-ServerMonitor"
-version = "0.1.0"
-description = ""
+version = "1.0.0"
+description = "A simple monitoring tool for servers."
 authors = ["Timothy Bryant <timothybryant3@gmail.com>"]
 readme = "README.md"
 packages = [{include = "src", from = "."}]
 # classifiers = ["Private :: Do not Upload"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11,<3.13"
 distro = "^1.8.0"
 netifaces = "^0.11.0"
 psutil = "^5.9.5"
@@ -29,6 +29,7 @@ isort = "^5.12.0"
 
 [tool.poetry.group.tooling.dependencies]
 pip-tools = "^7.1.0"
+pyinstaller = "^5.13.0"
 
 [build-system]
 requires = ["poetry-core"]

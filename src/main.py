@@ -1,8 +1,8 @@
 import argparse
+import os
 import platform
 import time
 
-from src.constants import ROOT_DIR
 from src.containers import print_running_containers
 from src.cpu import print_cpu_info
 from src.disks import print_disk_info
@@ -15,7 +15,7 @@ from src.system import print_system_info
 from src.utils import print_title_red
 
 
-def check_os():
+def check_os() -> None:
     """Checks if the OS is supported."""
     current_os = platform.system()
     if current_os in ("Windows", "Darwin"):
@@ -25,7 +25,7 @@ def check_os():
         time.sleep(2)
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     """
     Parses command-line arguments.
 
@@ -64,8 +64,8 @@ def parse_args():
     parser.add_argument(
         "-cf",
         "--config",
-        default=f"{ROOT_DIR}/config.yaml",
-        help="The path to the config file",
+        default=os.path.join(os.getenv("HOME", ""), ".config", "pez-sm", "config.yaml"),
+        help="The path to the config file (default: ~/.config/pez-sm/config.yaml))",
     )
 
     return parser.parse_args()
@@ -102,7 +102,7 @@ def main() -> None:
         print(f"An error occurred: {exception}")
 
 
-def print_all_info(config_file: str):
+def print_all_info(config_file: str) -> None:
     """
     Prints all system-related information.
 

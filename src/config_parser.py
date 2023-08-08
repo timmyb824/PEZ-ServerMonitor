@@ -3,7 +3,7 @@ import yaml
 from src.exceptions import ConfigFileNotFoundException, UnexpectedError, YAMLParseError
 
 
-def parse_config_file(yaml_file: str) -> dict | None:
+def parse_config_file(yaml_file: str) -> dict:
     """Parse the configuration file and return the content as a Python dictionary.
 
     Args:
@@ -15,7 +15,7 @@ def parse_config_file(yaml_file: str) -> dict | None:
         UnexpectedError: If any other unexpected error occurs.
     """
     try:
-        with open(yaml_file, "r") as config_file:
+        with open(yaml_file, "r", encoding="UTF-8") as config_file:
             config = yaml.safe_load(config_file)
         return config
     except FileNotFoundError as exception:

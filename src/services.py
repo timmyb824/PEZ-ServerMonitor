@@ -23,8 +23,8 @@ def check_a_service(port: int, host: str) -> bool:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         result = sock.connect_ex((host, port))
-    except socket.gaierror as e:
-        print(f"Invalid host/address {host}. Error: {e}")
+    except socket.gaierror as exception:
+        print(f"Invalid host/address {host}. Error: {exception}")
         return False
     finally:
         sock.close()
@@ -53,7 +53,7 @@ def print_process_info(config_file: str) -> None:
 
     try:
         config = parse_config_file(config_file)
-    except FileNotFoundError as exception:
+    except FileNotFoundError:
         print("Error: config yaml not found.")
         return
     except ConfigFileNotFoundException as exception:

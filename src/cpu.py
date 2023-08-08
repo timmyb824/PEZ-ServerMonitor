@@ -16,7 +16,7 @@ def get_cpu_cache_and_bogomips() -> tuple[str, str]:
     tuple: A tuple containing cpu_cache and cpu_bogomips.
     """
     try:
-        with open("/proc/cpuinfo", encoding="UTF-8") as f:
+        with open("/proc/cpuinfo", encoding="UTF-8", mode="r") as f:
             cpuinfo = f.readlines()
 
         cpu_cache = next(
