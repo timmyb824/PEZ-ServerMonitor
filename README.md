@@ -13,7 +13,7 @@ Additionally, this project is my venture to enhance my Python capabilities. Whil
 
 The following gif demonstrates some of the tool's features:
 
-![pez-sm-gif](./images/pez-sm.gif)
+![pez-sm-gif](./images/pez-sm-2.gif)
 
 ## Getting Started
 
