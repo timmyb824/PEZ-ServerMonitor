@@ -13,7 +13,7 @@ from src.latency import (  # replace 'src.latency' with actual module name
 
 def test_check_ping():
     with patch("src.latency.ping", return_value=0.002):
-        assert check_ping("localhost") == '2.0 ms'  # 0.002 seconds = 2 milliseconds
+        assert check_ping("localhost") == "2.0 ms"  # 0.002 seconds = 2 milliseconds
 
     with patch("src.latency.ping", return_value=None):
         assert check_ping("localhost") == "Timed Out"
