@@ -13,7 +13,7 @@ from src.latency import (  # replace 'src.latency' with actual module name
 
 def test_check_ping():
     with patch("src.latency.ping", return_value=0.002):
-        assert check_ping("localhost") == 2  # 0.002 seconds = 2 milliseconds
+        assert check_ping("localhost") == '2.0 ms'  # 0.002 seconds = 2 milliseconds
 
     with patch("src.latency.ping", return_value=None):
         assert check_ping("localhost") == "Timed Out"
@@ -51,7 +51,7 @@ def test_perform_ping(mocker):
         "src.latency.check_ping", side_effect=[1, "Timed Out", 2]
     )
     ping_hosts = ["host1", "host2", "host3"]
-    expected_results = {("host1", "1 ms"), ("host2", "Timed Out"), ("host3", "2 ms")}
+    expected_results = {("host1", "1"), ("host2", "Timed Out"), ("host3", "2")}
     assert {tuple(x) for x in perform_ping(ping_hosts)} == expected_results
     assert mock_check_ping.call_count == 3
 
