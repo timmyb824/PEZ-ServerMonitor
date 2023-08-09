@@ -91,7 +91,7 @@ options:
 
 The tool can be configured with a YAML file. As of now, the only configuration options are to set the services and ports to check up or down status for and targets to ping for latency information.
 
-The default location for the config file is `~/.config/pez-sm/config.yaml`. If you want to use a custom location, you can specify the path to the config file with the `-cf` flag (e.g. `pez-servermonitor -cf /path/to/config.yaml`)
+The default location for the config file is `~/.config/pez-sm/config.yaml`. If you want to use a custom location, you can specify the path to the config file with the `-cf` flag (e.g. `pez-servermonitor -cf /path/to/config.yaml -a`)
 
 The config file is fairly basic and needs to look like this:
 
