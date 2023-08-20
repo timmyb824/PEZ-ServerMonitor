@@ -1,7 +1,10 @@
 name: PEZ-ServerMonitor Build and Test Action
 
 on:
-  - push
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -55,4 +58,4 @@ jobs:
         shell: bash
         run: |
           export PYTHONPATH="${PYTHONPATH}:./src"
-          python -m poetry run python src/main.py -a
+          python -m poetry run python src/main.py run -a
