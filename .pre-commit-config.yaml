@@ -45,6 +45,13 @@ repos:
       - id: poetry-export
         args: ["-f", "requirements.txt", "-o", "requirements.txt"]
 
+-   repo: https://github.com/compilerla/conventional-pre-commit
+    rev: 'v2.4.0'
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [build, chore, ci, docs, feat, refactor, fix, test, perf, style]
+
 # Example of local hook
 # -   repo: local
 #     hooks:
