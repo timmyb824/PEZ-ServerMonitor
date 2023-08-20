@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from src.latency import (  # replace 'src.latency' with actual module name
+from src.core.latency import (  # replace 'src.latency' with actual module name
     calculate_average_latency,
     check_ping,
     perform_ping,
@@ -12,10 +12,10 @@ from src.latency import (  # replace 'src.latency' with actual module name
 
 
 def test_check_ping():
-    with patch("src.latency.ping", return_value=0.002):
+    with patch("src.core.latency.ping", return_value=0.002):
         assert check_ping("localhost") == "2.0 ms"  # 0.002 seconds = 2 milliseconds
 
-    with patch("src.latency.ping", return_value=None):
+    with patch("src.core.latency.ping", return_value=None):
         assert check_ping("localhost") == "Timed Out"
 
 
@@ -48,7 +48,7 @@ def test_calculate_average_latency():
 
 def test_perform_ping(mocker):
     mock_check_ping = mocker.patch(
-        "src.latency.check_ping", side_effect=[1, "Timed Out", 2]
+        "src.core.latency.check_ping", side_effect=[1, "Timed Out", 2]
     )
     ping_hosts = ["host1", "host2", "host3"]
     expected_results = {("host1", "1"), ("host2", "Timed Out"), ("host3", "2")}
@@ -56,9 +56,9 @@ def test_perform_ping(mocker):
     assert mock_check_ping.call_count == 3
 
 
-@patch("src.latency.parse_config_file")
-@patch("src.latency.perform_ping")
-@patch("src.latency.calculate_average_latency")
+@patch("src.core.latency.parse_config_file")
+@patch("src.core.latency.perform_ping")
+@patch("src.core.latency.calculate_average_latency")
 def test_print_latency_info(
     mock_calculate_average_latency, mock_perform_ping, mock_parse_config_file, capsys
 ):

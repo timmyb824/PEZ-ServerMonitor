@@ -4,7 +4,7 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from src.system import get_system_info
+from src.core.system import get_system_info
 
 
 @patch("platform.system")

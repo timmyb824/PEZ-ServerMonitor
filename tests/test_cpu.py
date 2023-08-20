@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, mock_open, patch
 import psutil
 import pytest
 
-from src.cpu import (
+from src.core.cpu import (
     get_cpu_info,
     get_cpu_usage,
     get_load_average,
@@ -92,14 +92,14 @@ def test_get_system_temperature():
 
 
 def test_print_cpu_info(capsys):
-    with patch("src.cpu.get_cpu_info") as mock_get_cpu_info, patch(
-        "src.cpu.get_cpu_usage"
+    with patch("src.core.cpu.get_cpu_info") as mock_get_cpu_info, patch(
+        "src.core.cpu.get_cpu_usage"
     ) as mock_get_cpu_usage, patch(
-        "src.cpu.get_system_temperature"
+        "src.core.cpu.get_system_temperature"
     ) as mock_get_system_temperature, patch(
-        "src.cpu.get_process_count"
+        "src.core.cpu.get_process_count"
     ) as mock_get_process_count, patch(
-        "src.cpu.get_load_average"
+        "src.core.cpu.get_load_average"
     ) as mock_get_load_average:
         mock_get_cpu_info.return_value = (
             4,
