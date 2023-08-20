@@ -2,7 +2,7 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from src.memory import calculate_memory_usage, get_memory_info, print_memory_info
+from src.core.memory import calculate_memory_usage, get_memory_info, print_memory_info
 
 
 def test_calculate_memory_usage():

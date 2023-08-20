@@ -1,18 +1,32 @@
-import argparse
-import os
+import click
 import platform
 import time
 
-from src.containers import print_running_containers
-from src.cpu import print_cpu_info
-from src.disks import print_disk_info
-from src.latency import print_latency_info
-from src.memory import print_memory_info
-from src.networking import print_network_info
-from src.processes import print_cpu_usage_info, print_memory_usage_info
-from src.services import print_process_info
-from src.system import print_system_info
-from src.utils import print_title_red
+
+from src.core.containers import print_running_containers
+from src.core.cpu import print_cpu_info
+from src.core.disks import print_disk_info
+from src.core.latency import print_latency_info
+from src.core.memory import print_memory_info
+from src.core.networking import print_network_info
+from src.core.processes import print_cpu_usage_info, print_memory_usage_info
+from src.core.services import print_process_info
+from src.core.system import print_system_info
+from src.utilities.utils import print_title_red
+from src.config.default_config import write_default_config
+from src.config.constants import CONFIG_PATH_DEFAULT
+
+
+DISPATCH = {
+    'all': lambda config: print_all_info(config),
+    'system': lambda _: print_system_info(),
+    'cpu': lambda _: (print_cpu_info(), print_cpu_usage_info()),
+    'memory': lambda _: (print_memory_info(), print_memory_usage_info()),
+    'disk': lambda _: print_disk_info(),
+    'network': lambda config: (print_network_info(), print_latency_info(config)),
+    'processes': lambda config: print_process_info(config),
+    'containers': lambda _: print_running_containers()
+}
 
 
 def check_os() -> None:
@@ -25,90 +39,58 @@ def check_os() -> None:
         time.sleep(2)
 
 
-def parse_args() -> argparse.Namespace:
-    """
-    Parses command-line arguments.
-
-    Returns:
-        Namespace: Parsed command-line arguments.
-    """
-    parser = argparse.ArgumentParser(description="System information tool.")
-    parser.add_argument("-a", "--all", action="store_true", help="Show all information")
-    parser.add_argument(
-        "-s", "--system", action="store_true", help="Show only system information"
-    )
-    parser.add_argument(
-        "-c", "--cpu", action="store_true", help="Show only CPU information"
-    )
-    parser.add_argument(
-        "-m", "--memory", action="store_true", help="Show only memory information"
-    )
-    parser.add_argument(
-        "-d", "--disk", action="store_true", help="Show only disk information"
-    )
-    parser.add_argument(
-        "-n",
-        "--network",
-        action="store_true",
-        help="Show only network and latency information",
-    )
-    parser.add_argument(
-        "-ps", "--processes", action="store_true", help="Show only services information"
-    )
-    parser.add_argument(
-        "-ct",
-        "--containers",
-        action="store_true",
-        help="Show only running container (docker or podman) information",
-    )
-    parser.add_argument(
-        "-cf",
-        "--config",
-        default=os.path.join(os.getenv("HOME", ""), ".config", "pez-sm", "config.yaml"),
-        help="The path to the config file (default: ~/.config/pez-sm/config.yaml))",
-    )
-
-    return parser.parse_args()
+# The main group for the CLI
+@click.group()
+def cli():
+    """System information tool."""
 
 
-def main() -> None:
-    """Main function."""
-    check_os()
-    args = parse_args()
+@cli.command(name="run")
+@click.option('-a', '--all', is_flag=True, help="Show all information")
+@click.option('-s', '--system', is_flag=True, help="Show only system information")
+@click.option('-c', '--cpu', is_flag=True, help="Show only CPU information")
+@click.option('-m', '--memory', is_flag=True, help="Show only memory information")
+@click.option('-d', '--disk', is_flag=True, help="Show only disk information")
+@click.option('-n', '--network', is_flag=True, help="Show only network and latency information")
+@click.option('-ps', '--processes', is_flag=True, help="Show only services information")
+@click.option('-ct', '--containers', is_flag=True, help="Show only running container (docker or podman) information")
+@click.option('--config-path', default=CONFIG_PATH_DEFAULT, help="The path to the config file.")
+def run(**kwargs):
+    """The run command is the main command for the tool."""
     try:
-        config_file = args.config
-        if args.all:
-            print_all_info(config_file)
-        elif args.system:
-            print_system_info()
-        elif args.cpu:
-            print_cpu_info()
-            print_cpu_usage_info()
-        elif args.memory:
-            print_memory_info()
-            print_memory_usage_info()
-        elif args.disk:
-            print_disk_info()
-        elif args.network:
-            print_network_info()
-            print_latency_info(config_file)
-        elif args.processes:
-            print_process_info(config_file)
-        elif args.containers:
-            print_running_containers()
-        else:
-            print("No arguments given. Use -h or --help for help.")
+        found = False
+        for key, function in DISPATCH.items():
+            if kwargs.get(key):
+                function(kwargs['config_path'])
+                found = True
+        if not found:
+            print("No arguments given. Use --help for help.")
     except Exception as exception:
         print(f"An error occurred: {exception}")
 
 
-def print_all_info(config_file: str) -> None:
+@cli.command(name="config")
+@click.option('--create', is_flag=True, help="Creates a new configuration file")
+@click.option('--config-path', default=CONFIG_PATH_DEFAULT, help="The path to the config file (default: ~/.config/pez-sm/config.yaml)")
+def create_config(create, config_path):
+    """The config command is used to create a default config file."""
+    try:
+        if create:
+            write_default_config(config_path)
+        else:
+            print("No actions given for config command. Use --create to create a config.")
+    except Exception as exception:
+        print(f"An error occurred: {exception}")
+
+
+def print_all_info(config_path: str) -> None:
     """
     Prints all system-related information.
 
     Args:
         config_file (str): The path to the config file.
     """
+    check_os()
     print_system_info()
     print_cpu_info()
     print_cpu_usage_info()
@@ -116,10 +98,10 @@ def print_all_info(config_file: str) -> None:
     print_memory_usage_info()
     print_disk_info()
     print_network_info()
-    print_latency_info(config_file)
-    print_process_info(config_file)
+    print_latency_info(config_path)
+    print_process_info(config_path)
     print_running_containers()
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    cli()

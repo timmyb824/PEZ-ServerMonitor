@@ -4,7 +4,7 @@ import time
 
 import distro
 
-from src.utils import print_bold_kv, print_title
+from src.utilities.utils import print_bold_kv, print_title
 
 
 def get_system_info() -> tuple[str, str, str, str, str, str, str, str, int, str]:

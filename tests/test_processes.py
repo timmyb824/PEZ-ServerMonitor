@@ -1,6 +1,6 @@
 from unittest.mock import Mock, call, patch
 
-from src.processes import (
+from src.core.processes import (
     get_processes,
     print_cpu_usage_info,
     print_memory_usage_info,

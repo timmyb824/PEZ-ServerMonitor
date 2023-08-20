@@ -4,9 +4,13 @@ import psutil
 import yaml
 from tabulate import tabulate
 
-from src.config_parser import parse_config_file
-from src.exceptions import ConfigFileNotFoundException, UnexpectedError, YAMLParseError
-from src.utils import print_title
+from src.config.config_parser import parse_config_file
+from src.utilities.exceptions import (
+    ConfigFileNotFoundException,
+    UnexpectedError,
+    YAMLParseError,
+)
+from src.utilities.utils import print_title
 
 
 def check_a_service(port: int, host: str) -> bool:
@@ -42,7 +46,7 @@ def get_process_count() -> int:
     return len(all_processes)
 
 
-def print_process_info(config_file: str) -> None:
+def print_process_info(config_path: str) -> None:
     """
     Prints the information about all the services defined in the 'config.yaml' file.
 
@@ -52,7 +56,7 @@ def print_process_info(config_file: str) -> None:
     print_title("Services Information")
 
     try:
-        config = parse_config_file(config_file)
+        config = parse_config_file(config_path)
     except FileNotFoundError:
         print("Error: config yaml not found.")
         return

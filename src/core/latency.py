@@ -2,12 +2,16 @@ import math
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import yaml
-from ping3 import ping, verbose_ping
+from ping3 import ping
 from tabulate import tabulate
 
-from src.config_parser import parse_config_file
-from src.exceptions import ConfigFileNotFoundException, UnexpectedError, YAMLParseError
-from src.utils import print_bold_kv, print_title
+from src.config.config_parser import parse_config_file
+from src.utilities.exceptions import (
+    ConfigFileNotFoundException,
+    UnexpectedError,
+    YAMLParseError,
+)
+from src.utilities.utils import print_bold_kv, print_title
 
 
 def check_ping(host: str) -> str:
@@ -82,7 +86,7 @@ def perform_ping(ping_hosts: list) -> list:
     return ping_results
 
 
-def print_latency_info(config_file: str) -> None:
+def print_latency_info(config_path: str) -> None:
     # sourcery skip: extract-method
     """
     Prints latency information.
@@ -93,7 +97,7 @@ def print_latency_info(config_file: str) -> None:
     print_title("Latency Information")
 
     try:
-        config = parse_config_file(config_file)
+        config = parse_config_file(config_path)
         ping_hosts = config["ping_hosts"]
 
         ping_results = perform_ping(ping_hosts)

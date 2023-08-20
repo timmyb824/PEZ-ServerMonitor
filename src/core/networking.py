@@ -4,8 +4,8 @@ import netifaces
 import psutil
 from tabulate import tabulate
 
-from src.constants import GET_WAN_IP
-from src.utils import print_title
+from src.config.constants import GET_WAN_IP
+from src.utilities.utils import print_title
 
 
 def get_network_info() -> tuple[dict[str, str], tuple[str, str]]:

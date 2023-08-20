@@ -13,7 +13,7 @@ from unittest.mock import patch
 import psutil
 import pytest
 
-from src.disks import get_disk_space, print_disk_info
+from src.core.disks import get_disk_space, print_disk_info
 
 
 @patch("psutil.disk_usage")
@@ -47,7 +47,7 @@ def test_get_disk_space(mock_disk_partitions, mock_disk_usage):
     assert get_disk_space() == expected_output
 
 
-@patch("src.disks.get_disk_space")
+@patch("src.core.disks.get_disk_space")
 def test_print_disk_info(mock_get_disk_space, capsys):
     mock_get_disk_space.return_value = [
         {

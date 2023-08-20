@@ -3,7 +3,7 @@ import subprocess
 import psutil
 from tabulate import tabulate
 
-from src.utils import print_title
+from src.utilities.utils import print_title
 
 
 def get_disk_space() -> list[dict]:

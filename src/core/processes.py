@@ -3,7 +3,7 @@ import time
 import psutil
 from tabulate import tabulate
 
-from src.utils import bold
+from src.utilities.utils import bold
 
 
 def get_processes():

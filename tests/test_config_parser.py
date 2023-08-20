@@ -146,7 +146,7 @@
 import pytest
 import yaml
 
-from src.config_parser import (
+from src.config.config_parser import (
     ConfigFileNotFoundException,
     UnexpectedError,
     YAMLParseError,
@@ -176,7 +176,7 @@ def test_parse_config_file_file_not_found():
 def test_parse_config_file_yaml_error(tmpdir):
     # Create a temporary file that is not a valid YAML
     file_path = tmpdir.join("config.yaml")
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="UTF-8") as f:
         f.write("{ unbalanced braces")
 
     with pytest.raises(YAMLParseError):
@@ -190,7 +190,7 @@ def test_parse_config_file_unexpected_error(mocker, tmpdir):
         "services": [{"name": "Test Service", "port": 1234, "host": "localhost"}],
         "ping_hosts": ["localhost"],
     }
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="UTF-8") as f:
         yaml.dump(config_dict, f)
 
     # Mock yaml.safe_load to raise an Exception
