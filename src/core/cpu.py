@@ -4,7 +4,7 @@ from typing import Literal, Union
 
 import psutil
 
-from src.utils import print_bold_kv, print_title
+from src.utilities.utils import print_bold_kv, print_title
 
 
 def get_cpu_cache_and_bogomips() -> tuple[str, str]:

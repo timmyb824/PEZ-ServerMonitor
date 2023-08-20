@@ -1,6 +1,6 @@
 from tabulate import tabulate
 
-from src.utils import print_title
+from src.utilities.utils import print_title
 
 
 def calculate_memory_usage(
