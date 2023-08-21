@@ -2,7 +2,7 @@
 version: '3'
 
 services:
-  pez-servermonitor:
+  python-sysinformer:
     build: .
-    container_name: pez-servermonitor
-    command: python src/main.py -a
+    container_name: python-sysinformer
+    command: python src/main.py run -a
