@@ -69,6 +69,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          tags: true
 
       - name: Install Python
         uses: actions/setup-python@v4
