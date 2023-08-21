@@ -2,6 +2,29 @@
 
 
 
+## v1.2.0 (2023-08-21)
+
+### Chore
+
+* chore(ci): Update CI pipeline for package release ([`7b52af6`](https://github.com/timmyb824/python-SysInformer/commit/7b52af69ff805a98ca5f2854ce090e9fa72603db))
+
+* chore: Update pyproject.toml build command ([`0c17c08`](https://github.com/timmyb824/python-SysInformer/commit/0c17c08fd0c6db5fe068a616e11f1dc25eeff14b))
+
+* chore: Update version to 1.1.0 ([`2f7e9cc`](https://github.com/timmyb824/python-SysInformer/commit/2f7e9cc439cdccc89c06e49d5aa22a98dc735320))
+
+### Feature
+
+* feat(ci): Replace semantic-release with its own github action ([`16fe398`](https://github.com/timmyb824/python-SysInformer/commit/16fe398e69cdb5fe5deee326228cd5abb0d6fa4d))
+
+### Unknown
+
+* Merge pull request #15 from timmyb824/ci/switch-semantic-release-back-to-shell ([`1685abd`](https://github.com/timmyb824/python-SysInformer/commit/1685abde2db99fa6eb00afb0b94d4123b944d138))
+
+* Merge pull request #14 from timmyb824/ci/fix-semantic-release-action ([`47bdc09`](https://github.com/timmyb824/python-SysInformer/commit/47bdc09c0be2836830b12fc1c54c65b91e4af0c4))
+
+* Merge pull request #13 from timmyb824/ci/use-semantic-action ([`c43a04d`](https://github.com/timmyb824/python-SysInformer/commit/c43a04d7c3d975f87099fba44b229f0a140c43ff))
+
+
 ## v1.1.0 (2023-08-21)
 
 ### Build
