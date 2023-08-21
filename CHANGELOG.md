@@ -2,6 +2,17 @@
 
 
 
+## v1.2.5 (2023-08-21)
+
+### Ci
+
+* ci: update ci.yaml by removing outputs  and pyproject.toml by changing remove_dist config ([`72d3c4f`](https://github.com/timmyb824/python-SysInformer/commit/72d3c4f9aeb74d3378ed098c6b91cf9d30314e74))
+
+### Unknown
+
+* Merge pull request #22 from timmyb824/ci/fix-ci-again ([`a938963`](https://github.com/timmyb824/python-SysInformer/commit/a9389633e8fde8e80d4fa2b66be531c04b3bc15f))
+
+
 ## v1.2.4 (2023-08-21)
 
 ### Ci
