@@ -92,24 +92,28 @@ jobs:
         run: |
           python -m poetry install --no-root
 
-      # - name: Prepare package for release
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     git config user.name github-actions
-      #     git config user.email github-actions@github.com
-      #     poetry run semantic-release version
-      #     poetry run semantic-release changelog
-      #     poetry run semantic-release publish
-
-      - name: Run Python Semantic Release
+      - name: Prepare package for release
         id: release
-        uses: python-semantic-release/python-semantic-release@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          poetry run semantic-release version
+          poetry run semantic-release changelog
+          poetry run semantic-release publish
+
+      # Unable to use at the moment due to the python version used by the action
+      # - name: Run Python Semantic Release
+      #   id: release
+      #   uses: python-semantic-release/python-semantic-release@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to TestPyPI
-        if: steps.release.outputs.released == 'true'
+        id: test_publish
+        if: steps.release.outcome == 'success'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
@@ -117,7 +121,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Test install from TestPyPI
-        if: steps.release.outputs.released == 'true'
+        if: steps.test_publish.outcome == 'success'
         shell: bash
         id: test_install
         run: |
@@ -128,7 +132,7 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: steps.release.outputs.released == 'true' && steps.test_install.outcome == 'success'
+        if: steps.test_install.outcome == 'success'
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
