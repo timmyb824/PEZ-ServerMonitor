@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "PEZ-ServerMonitor"
-version = "1.0.2"
-description = "A simple monitoring tool for servers."
+name = "python-SysInformer"
+version = "1.0.0"
+description = "A simple system information tool for Linux"
 authors = ["Timothy Bryant <timothybryant3@gmail.com>"]
 readme = "README.md"
 packages = [{include = "src", from = "."}]
@@ -41,7 +41,7 @@ pythonpath = [
 ]
 
 [tool.poetry.scripts]
-pez-sm = "src.main:cli"
+psi = "src.main:cli"
 
 [tool.semantic_release.commit_parser_options]
 allowed_tags = [
