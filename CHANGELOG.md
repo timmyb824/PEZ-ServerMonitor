@@ -2,6 +2,17 @@
 
 
 
+## v1.2.4 (2023-08-21)
+
+### Ci
+
+* ci: update release step in ci.yaml ([`ac51e3d`](https://github.com/timmyb824/python-SysInformer/commit/ac51e3de03f4a2c9f148db168e73f39ec9b854af))
+
+### Unknown
+
+* Merge pull request #21 from timmyb824/ci/update-ci ([`26a1204`](https://github.com/timmyb824/python-SysInformer/commit/26a12040b05e5afa8e4c11fffb946bfbd308a673))
+
+
 ## v1.2.3 (2023-08-21)
 
 ### Ci
