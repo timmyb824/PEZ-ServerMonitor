@@ -64,6 +64,7 @@ jobs:
     needs: Test
     environment:
       name: production
+      url: https://pypi.org/project/python-sysinformer/
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     name: Release
@@ -115,10 +116,6 @@ jobs:
         id: test_publish
         if: steps.release.outcome == 'success'
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository-url: https://test.pypi.org/legacy/
 
       - name: Test install from TestPyPI
         if: steps.test_publish.outcome == 'success'
