@@ -71,5 +71,5 @@ build_command = "poetry build"
 dist_path = "dist/"
 upload_to_release = true
 upload_to_pypi = false
-remove_dist = true
+remove_dist = false
 patch_without_tag = true
