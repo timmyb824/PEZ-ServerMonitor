@@ -2,6 +2,17 @@
 
 
 
+## v1.2.3 (2023-08-21)
+
+### Ci
+
+* ci: correct prepare package for release output ([`a0f3957`](https://github.com/timmyb824/python-SysInformer/commit/a0f395772b91ce7499cec71d513528035eacf169))
+
+### Unknown
+
+* Merge pull request #20 from timmyb824/ci/ci-ouput-tweaks ([`d0c341c`](https://github.com/timmyb824/python-SysInformer/commit/d0c341c36b0d2ec3dc8da867907f3906c78bb734))
+
+
 ## v1.2.2 (2023-08-21)
 
 ### Chore
