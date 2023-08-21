@@ -6,7 +6,7 @@ import yaml
 def write_default_config(config_path=None) -> None:
     # Use the default path if none provided
     if config_path is None:
-        config_dir = os.path.join(os.path.expanduser("~"), ".config", "pez-sm")
+        config_dir = os.path.join(os.path.expanduser("~"), ".config", "psi")
         config_path = os.path.join(config_dir, "config.yaml")
 
         # Ensure the directory exists
