@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PEZ-ServerMonitor"
-version = "1.0.0"
+version = "1.0.1"
 description = "A simple monitoring tool for servers."
 authors = ["Timothy Bryant <timothybryant3@gmail.com>"]
 readme = "README.md"
