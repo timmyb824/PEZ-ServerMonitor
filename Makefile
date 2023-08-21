@@ -1,6 +1,6 @@
 run-app:
 	@echo "Running app via local config"
-	python src/main.py -a
+	python src/main.py run -a
 
 run-pre-commit:
 	@echo "Running pre-commit"
