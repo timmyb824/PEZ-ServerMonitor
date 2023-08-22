@@ -102,6 +102,11 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           poetry run semantic-release version
+          delimiter="$(openssl rand -hex 8)"
+          POETRY_VERSION=$(poetry run semantic-release version)
+          echo "version-output<<${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo "${POETRY_VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
           poetry run semantic-release changelog
           poetry run semantic-release publish
 
@@ -111,6 +116,12 @@ jobs:
       #   uses: python-semantic-release/python-semantic-release@master
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check release output and terminate if no new version
+        if: contains(steps.package_release.outputs.version-output, 'No release will be made,') && contains(steps.package_release.outputs.version-output, 'has already been released!')
+        run: |
+          echo "No new version to release. Ending workflow."
+          exit 0
 
       - name: Publish to TestPyPI
         id: test_publish
