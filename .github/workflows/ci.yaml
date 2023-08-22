@@ -77,9 +77,10 @@ jobs:
       - name: Check commit message for specific prefixes that do not trigger a new release
         shell: bash
         run: |
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
           if [[ "$COMMIT_MSG" =~ (build|chore|refactor) ]]; then
-              echo "No new version to publish"
-              exit 0
+            echo "No new version to publish"
+            exit 0
           fi
 
       - name: Checkout
