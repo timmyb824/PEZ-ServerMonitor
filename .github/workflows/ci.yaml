@@ -103,7 +103,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           poetry run semantic-release version
-          VERSION=$(poetry run semantic-release version | grep -oE "\d+\.\d+\.\d+"))
+          VERSION=$(poetry run semantic-release version | grep -oE "\d+\.\d+\.\d+")
           echo "VERSION_OUTPUT<<EOF" >> $GITHUB_ENV
           echo "$VERSION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
