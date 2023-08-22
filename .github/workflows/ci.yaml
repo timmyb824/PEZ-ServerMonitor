@@ -103,13 +103,12 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           poetry run semantic-release version
-          poetry run semantic-release changelog
-          # poetry run semantic-release publish
-          PUBLISH=$(poetry run semantic-release publish)
-          echo "PUBLISH_OUTPUT<<EOF" >> $GITHUB_ENV
-          echo "$PUBLISH" >> $GITHUB_ENV
+          # poetry run semantic-release changelog
+          CHANGELOG=$(poetry run semantic-release changelog)
+          echo "CHANGELOG_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
+          poetry run semantic-release publish
       # Unable to use at the moment due to the python version used by the action
       # - name: Run Python Semantic Release
       #   id: release
@@ -121,7 +120,7 @@ jobs:
         id: check_publish
         if: steps.package_release.outcome == 'success'
         run: |
-          if [[ "$VERSION_OUTPUT" == *"No new version to release"* && "$VERSION_OUTPUT" == *"has already been released!"* ]]; then
+          if [[ "$CHANGELOG_OUTPUT" == *"No new version to release"* && "$CHANGELOG_OUTPUT" == *"has already been released!"* ]]; then
             echo "No new version, exiting"
             echo "SHOULD_CONTINUE=false" >> $GITHUB_OUTPUT
           else
