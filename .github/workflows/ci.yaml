@@ -74,15 +74,6 @@ jobs:
       contents: write
     steps:
 
-      - name: Check commit message for specific prefixes that do not trigger a new release
-        shell: bash
-        run: |
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          if [[ "$COMMIT_MSG" =~ (build|chore|refactor) ]]; then
-            echo "No new version to publish"
-            exit 0
-          fi
-
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -113,7 +104,11 @@ jobs:
           git config user.email github-actions@github.com
           poetry run semantic-release version
           poetry run semantic-release changelog
-          poetry run semantic-release publish
+          # poetry run semantic-release publish
+          PUBLISH=$(poetry run semantic-release publish)
+          echo "PUBLISH_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "$PUBLISH" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       # Unable to use at the moment due to the python version used by the action
       # - name: Run Python Semantic Release
@@ -122,15 +117,27 @@ jobs:
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check publish output and terminate if no new version
+        id: check_publish
+        if: steps.package_release.outcome == 'success'
+        run: |
+          if [[ "$VERSION_OUTPUT" == *"No new version to release"* && "$VERSION_OUTPUT" == *"has already been released!"* ]]; then
+            echo "No new version, exiting"
+            echo "SHOULD_CONTINUE=false" >> $GITHUB_OUTPUT
+          else
+            echo "New version, continuing"
+            echo "SHOULD_CONTINUE=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Publish to TestPyPI
         id: test_publish
-        if: steps.package_release.outcome == 'success'
+        if: steps.package_release.outcome == 'success' && steps.check_publish.outputs.SHOULD_CONTINUE == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Test install from TestPyPI
-        if: steps.test_publish.outcome == 'success'
+        if: steps.test_publish.outcome == 'success' && steps.check_publish.outputs.SHOULD_CONTINUE == 'true'
         shell: bash
         id: test_install
         run: |
@@ -141,4 +148,4 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: steps.test_install.outcome == 'success'
+        if: steps.test_install.outcome == 'success' && steps.check_publish.outputs.SHOULD_CONTINUE == 'true'
