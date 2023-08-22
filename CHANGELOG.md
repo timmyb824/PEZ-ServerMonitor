@@ -2,6 +2,23 @@
 
 
 
+## v1.2.6 (2023-08-22)
+
+### Chore
+
+* chore: update makefile ([`4c29052`](https://github.com/timmyb824/python-SysInformer/commit/4c29052c84372ab2e2e2644b5c8998b667c0312d))
+
+### Ci
+
+* ci: update ci.yaml to add conditional logic ([`2b6c32a`](https://github.com/timmyb824/python-SysInformer/commit/2b6c32a2aa6b8b755c1bdd301c76d14ed61846ba))
+
+### Unknown
+
+* Merge pull request #24 from timmyb824/ci/ci-add-conditional ([`e89e6e0`](https://github.com/timmyb824/python-SysInformer/commit/e89e6e0907cc03b1b5034de616bb1f8c7a371b0c))
+
+* Merge pull request #23 from timmyb824/chore/test-no-new-version ([`a4379ad`](https://github.com/timmyb824/python-SysInformer/commit/a4379ad20af5499de8dd3bc0d5b5cfee62bd379c))
+
+
 ## v1.2.5 (2023-08-21)
 
 ### Ci
