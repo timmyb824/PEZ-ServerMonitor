@@ -108,10 +108,10 @@ jobs:
           echo "VERSION_OUTPUT<<EOF" >> $GITHUB_ENV
           echo "$VERSION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          echo env.VERSION_OUTPUT
+          echo ${{ env.VERSION_OUTPUT }}
 
       - name: Check release output and terminate if no new version
-        if: contains(env.VERSION_OUTPUT, 'No new version to release') && contains(env.VERSION_OUTPUT, 'has already been released!')
+        if: contains(${{ env.VERSION_OUTPUT }}, 'No new version to release') && contains(${{ env.VERSION_OUTPUT }}, 'has already been released!')
         run: |
           echo "No new version to release. Ending workflow."
           exit 0
