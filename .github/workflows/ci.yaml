@@ -105,18 +105,19 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION=$(poetry run semantic-release version)
-          delimiter="$(openssl rand -hex 8)"
-          {
-            echo "version-ouput<<${delimiter}"
-            echo "${VERSION}"
-            echo "${delimiter}"
-          } >> $GITHUB_OUTPUT
+          echo "VERSION_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "$VERSION" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Check release output and terminate if no new version
-        if: contains(steps.version.outputs.version-ouput, 'No new version to release') && contains(steps.version.outputs.version-ouput, 'has already been released!')
+        shell: bash
         run: |
-          echo "No new version to release. Ending workflow."
-          exit 0
+          if [[ "$VERSION_OUTPUT" == *"No new version to release"* && "$VERSION_OUTPUT" == *"has already been released!"* ]]; then
+            echo "No new version, exiting"
+            exit 0
+          else
+            echo "New version, continuing"
+          fi
 
       - name: Semantic Release Publish
         id: package_release
