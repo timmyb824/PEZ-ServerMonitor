@@ -109,6 +109,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           poetry run semantic-release changelog
           poetry run semantic-release publish
+
       # Unable to use at the moment due to the python version used by the action
       # - name: Run Python Semantic Release
       #   id: release
