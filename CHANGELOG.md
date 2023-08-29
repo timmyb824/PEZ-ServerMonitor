@@ -2,6 +2,75 @@
 
 
 
+## v1.2.7 (2023-08-29)
+
+### Chore
+
+* chore(ci): optimize semantic-release workflow ([`12df791`](https://github.com/timmyb824/python-SysInformer/commit/12df7912b81cc323aa88089ddf6d9eb2e9b19195))
+
+* chore: test no release attempt 2 ([`6870512`](https://github.com/timmyb824/python-SysInformer/commit/687051244231eb3ba5df22a9027f1f4cdeae14a1))
+
+* chore: test no release ([`4d00623`](https://github.com/timmyb824/python-SysInformer/commit/4d006231b980681a66eca41259a389111d05a411))
+
+* chore: fix extra ) ([`5546de2`](https://github.com/timmyb824/python-SysInformer/commit/5546de22e7e301240397c1f5800acd7b6cd94f16))
+
+* chore: change publish to version ([`ba072df`](https://github.com/timmyb824/python-SysInformer/commit/ba072df0261b6e249425fa1018bcc774a59aa75e))
+
+* chore: change publish to changelog -n ([`4e7ab9c`](https://github.com/timmyb824/python-SysInformer/commit/4e7ab9cfc6df80729ca1aaaded8a5766a79c8b53))
+
+* chore: remove check for specific commit message prefixes and add check for publish output to determine if a new version is available before continuing with publishing and testing steps ([`7b802a9`](https://github.com/timmyb824/python-SysInformer/commit/7b802a90e900ff3f0fc839e99abf7e704d8f23c6))
+
+* chore: add missing COMMIT_MSG variable ([`ca32b08`](https://github.com/timmyb824/python-SysInformer/commit/ca32b0827fedbc1f80f7d2303b61967b943e3d27))
+
+* chore: fix initial step logic ([`62b6dc8`](https://github.com/timmyb824/python-SysInformer/commit/62b6dc8b9dd53d2a33895406595ca5f3437bbf3a))
+
+* chore: add step to check prefixes ([`caa119b`](https://github.com/timmyb824/python-SysInformer/commit/caa119b00c11161828d96c5acec9c5429c94df43))
+
+* chore: try checking env with shell script ([`a73b650`](https://github.com/timmyb824/python-SysInformer/commit/a73b6504b236e8c685eb7f02608a48616eb257df))
+
+* chore: fix syntax error in if and use GITHUB_OUTPUT instead of GITHUB_ENV ([`4eaed2d`](https://github.com/timmyb824/python-SysInformer/commit/4eaed2d20015fe880cc4067ceb7fe3bf534fab09))
+
+* chore: fix syntax error in if condition to correctly reference environment variable VERSION_OUTPUT ([`e6b8b29`](https://github.com/timmyb824/python-SysInformer/commit/e6b8b29918b762de6ac192a8d8029405d67a72fc))
+
+* chore: try github_env in if logic ([`572f1e2`](https://github.com/timmyb824/python-SysInformer/commit/572f1e2c49cb52a76f5546f71b06bc27e421b143))
+
+### Fix
+
+* fix: Fix encoding issue in reading &#39;/proc/meminfo&#39; file ([`6ca10d2`](https://github.com/timmyb824/python-SysInformer/commit/6ca10d2134394b8b870d8bd64d45d511c24ea54e))
+
+### Unknown
+
+* Merge pull request #39 from timmyb824/ci/fix-ci-versioning3 ([`41a3f89`](https://github.com/timmyb824/python-SysInformer/commit/41a3f89381a16566c4d5a9cd3bce93b26306f888))
+
+* Merge pull request #38 from timmyb824/ci/fix-ci-versioning2 ([`9512ec8`](https://github.com/timmyb824/python-SysInformer/commit/9512ec85ee352596e663976a85bc34fefdb9abdf))
+
+* Merge pull request #37 from timmyb824/ci/fix-ci-versioning ([`2359e4e`](https://github.com/timmyb824/python-SysInformer/commit/2359e4ed7b5b6e3f86072d1dfcd00c0549b34e36))
+
+* Merge pull request #36 from timmyb824/ci/test-ci ([`dede18a`](https://github.com/timmyb824/python-SysInformer/commit/dede18adaf160a75e32ce2c4bc528df0dd142b07))
+
+* Merge pull request #35 from timmyb824/ci/ci-add-conditional13 ([`ec9aaba`](https://github.com/timmyb824/python-SysInformer/commit/ec9aabae8e94bc3f6a63a576164bd8da17cc5d9e))
+
+* Merge pull request #34 from timmyb824/ci/ci-add-conditional12 ([`d17c56b`](https://github.com/timmyb824/python-SysInformer/commit/d17c56b97552d34ded21215821f35fe34a6b7c6d))
+
+* Merge pull request #33 from timmyb824/ci/ci-add-conditional11 ([`c3fbfda`](https://github.com/timmyb824/python-SysInformer/commit/c3fbfda8f60002cb7255b33390872bcd6761d714))
+
+* Merge pull request #32 from timmyb824/ci/ci-add-conditional10 ([`0c4223d`](https://github.com/timmyb824/python-SysInformer/commit/0c4223dab9864d1a184ab1c4844c3300daf800d2))
+
+* Merge pull request #31 from timmyb824/chore/ci-add-conditional9 ([`f4501d2`](https://github.com/timmyb824/python-SysInformer/commit/f4501d2ffff9eab9ba9ab00a9c56c071691a89ae))
+
+* Merge pull request #30 from timmyb824/chore/ci-add-conditional7 ([`eeb065e`](https://github.com/timmyb824/python-SysInformer/commit/eeb065e324f6629bec5ba5cbff90419d55b46733))
+
+* Merge pull request #29 from timmyb824/ci/ci-add-conditional6 ([`1104c68`](https://github.com/timmyb824/python-SysInformer/commit/1104c68b59a4ab610666a950c94788623f12ba54))
+
+* Merge pull request #28 from timmyb824/ci/ci-add-conditional5 ([`36c8aae`](https://github.com/timmyb824/python-SysInformer/commit/36c8aae027ddc3bf763ca7b36bb7e9fd0f95b737))
+
+* Merge pull request #27 from timmyb824/ci/ci-add-conditional4 ([`29721d0`](https://github.com/timmyb824/python-SysInformer/commit/29721d065397f1a0dce2c615738f38770e9a1ff5))
+
+* Merge pull request #26 from timmyb824/ci/ci-add-conditional3 ([`f6b0864`](https://github.com/timmyb824/python-SysInformer/commit/f6b0864e315bccb8c5268c4b6a303a0f3759d839))
+
+* Merge pull request #25 from timmyb824/ci/ci-add-conditional2 ([`4c3eb66`](https://github.com/timmyb824/python-SysInformer/commit/4c3eb664a743455eba35c640ab9ef5d060a62850))
+
+
 ## v1.2.6 (2023-08-22)
 
 ### Chore
