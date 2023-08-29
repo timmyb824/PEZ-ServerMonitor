@@ -2,6 +2,17 @@
 
 
 
+## v1.2.9 (2023-08-29)
+
+### Ci
+
+* ci: update ci.yaml script to test publish of new version ([`680d953`](https://github.com/timmyb824/python-SysInformer/commit/680d953c49a5233cb68162f29004447797f3fdef))
+
+### Unknown
+
+* Merge pull request #41 from timmyb824/ci/fix-ci-versioning5 ([`3eeee3a`](https://github.com/timmyb824/python-SysInformer/commit/3eeee3ae09cad095a557a49590aa8dfa2ffb36ae))
+
+
 ## v1.2.8 (2023-08-29)
 
 ### Ci

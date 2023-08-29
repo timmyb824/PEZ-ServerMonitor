@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-SysInformer"
-version = "1.2.8"
+version = "1.2.9"
 description = "A simple system information tool for Linux"
 authors = ["Timothy Bryant <timothybryant3@gmail.com>"]
 readme = "README.md"
