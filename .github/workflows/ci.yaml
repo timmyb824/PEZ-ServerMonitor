@@ -102,7 +102,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          poetry run semantic-release version
+          poetry run semantic-release version || echo "publish_failed=true" >> $GITHUB_ENV
           poetry run semantic-release changelog
           poetry run semantic-release publish || echo "publish_failed=true" >> $GITHUB_ENV
           if [ "$publish_failed" == "true" ]; then
