@@ -2,6 +2,17 @@
 
 
 
+## v1.2.8 (2023-08-29)
+
+### Ci
+
+* ci: add error handling to version command as well ([`b8e8a7a`](https://github.com/timmyb824/python-SysInformer/commit/b8e8a7a72ed7bda2d484a5f5effd9bb1d88fc086))
+
+### Unknown
+
+* Merge pull request #40 from timmyb824/ci/fix-ci-versioning4 ([`8b3189d`](https://github.com/timmyb824/python-SysInformer/commit/8b3189d5171bdab9534bc3423696b970fbad7e79))
+
+
 ## v1.2.7 (2023-08-29)
 
 ### Chore
