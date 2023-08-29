@@ -39,7 +39,7 @@ def get_memory_info() -> tuple[int, int, float, int, int, float]:
     try:
         mem_info = {
             i.split()[0].rstrip(":"): int(i.split()[1])
-            for i in open("/proc/meminfo").readlines()
+            for i in open("/proc/meminfo", encoding="UTF-8").readlines()
         }
     except (FileNotFoundError, PermissionError):
         # print(f"Error reading file '/proc/meminfo': {exception}")
