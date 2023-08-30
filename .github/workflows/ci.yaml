@@ -113,13 +113,6 @@ jobs:
             echo "No release published, skipping remaining steps"
           fi
 
-      # Unable to use at the moment due to the python version used by the action
-      # - name: Run Python Semantic Release
-      #   id: release
-      #   uses: python-semantic-release/python-semantic-release@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Publish to TestPyPI
         id: test_publish
         if: steps.package_release.outputs.PACKAGE_RELEASE_SUCCESS == 'true'
