@@ -2,6 +2,17 @@
 
 
 
+## v1.2.11 (2023-08-30)
+
+### Fix
+
+* fix: Update default config file path ([`436d55b`](https://github.com/timmyb824/python-SysInformer/commit/436d55b5fb1936c90cc32f50cb958ce224d41ca5))
+
+### Unknown
+
+* Merge pull request #47 from timmyb824/fix/default-config-path ([`4c0b8c8`](https://github.com/timmyb824/python-SysInformer/commit/4c0b8c882c4b6e7f02a64f669bcc62af0e07d265))
+
+
 ## v1.2.10 (2023-08-30)
 
 ### Chore
