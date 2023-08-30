@@ -102,27 +102,19 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          semantic_release_exit_code=0
-          poetry run semantic-release version || semantic_release_exit_code=$?
-          echo $semantic_release_exit_code
-          if [ $semantic_release_exit_code -eq 0 ]; then
-            poetry run semantic-release changelog
-            poetry run semantic-release publish
-            echo "PACKAGE_RELEASE_SUCCESS=true" >> $GITHUB_OUTPUT
-          else
-            echo "PACKAGE_RELEASE_SUCCESS=false" >> $GITHUB_OUTPUT
-            echo "No release published, skipping remaining steps"
-          fi
+          poetry run semantic-release version
+          poetry run semantic-release changelog
+          poetry run semantic-release publish
 
       - name: Publish to TestPyPI
         id: test_publish
-        if: steps.package_release.outputs.PACKAGE_RELEASE_SUCCESS == 'true'
+        if: success()
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Test install from TestPyPI
-        if: steps.test_publish.outcome == 'success' && steps.package_release.outputs.PACKAGE_RELEASE_SUCCESS == 'true'
+        if: steps.test_publish.outcome == 'success'
         shell: bash
         id: test_install
         run: |
@@ -133,4 +125,4 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: steps.test_install.outcome == 'success' && steps.package_release.outputs.PACKAGE_RELEASE_SUCCESS == 'true'
+        if: steps.test_install.outcome == 'success'
