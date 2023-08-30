@@ -2,6 +2,17 @@
 
 
 
+## v1.2.12 (2023-08-30)
+
+### Fix
+
+* fix: ensure default config is created when folder does not already exist ([`b0d7142`](https://github.com/timmyb824/python-SysInformer/commit/b0d7142ba7f5901ef775045d11aec139b023b694))
+
+### Unknown
+
+* Merge pull request #48 from timmyb824/fix/config-path-creation ([`3ebec0c`](https://github.com/timmyb824/python-SysInformer/commit/3ebec0c4207f474a2573b326b3516973e76b7689))
+
+
 ## v1.2.11 (2023-08-30)
 
 ### Fix
