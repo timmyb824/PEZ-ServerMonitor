@@ -106,9 +106,18 @@ jobs:
           poetry run semantic-release changelog
           poetry run semantic-release publish
 
+      - name: Check if dist folder has contents
+        id: check_dist
+        run: |
+          if [ -d "dist/" ] && [ "$(ls -A dist/)" ]; then
+            echo "DIST_EXISTS=true" >> $GITHUB_OUTPUT
+          else
+            echo "DIST_EXISTS=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Publish to TestPyPI
         id: test_publish
-        if: success()
+        if: steps.check_dist.outputs.DIST_EXISTS == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
