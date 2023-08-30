@@ -20,7 +20,6 @@ services:
 
 ping_hosts:
   - google.com
-  - facebook.com
-  - twitter.com
+  - medium.com
   - timothybryantjr.com
   - github.com
