@@ -81,20 +81,6 @@ The most basic usage to retrieve all information is:
 psi run -a
 ```
 
-If you prefer to only retrieve specific information, you can use the following flags:
-
-
-```bash
-Usage: psi config [OPTIONS]
-
-  The config command is used to create a default config file.
-
-Options:
-  --create            Creates a new configuration file
-  --config-path TEXT  The path to the config file (default: ~/.config/psi/config.yaml)
-  --help              Show this message and exit.
-```
-
 If you prefer to only retrieve specific information, you can use the following options:
 
 ```bash
