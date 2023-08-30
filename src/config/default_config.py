@@ -4,13 +4,14 @@ import yaml
 
 
 def write_default_config(config_path=None) -> None:
-    # Use the default path if none provided
     if config_path is None:
         config_dir = os.path.join(os.path.expanduser("~"), ".config", "psi")
         config_path = os.path.join(config_dir, "config.yaml")
+    else:
+        config_dir = os.path.dirname(config_path)
 
-        # Ensure the directory exists
-        os.makedirs(config_dir, exist_ok=True)
+    # Ensure the directory exists
+    os.makedirs(config_dir, exist_ok=True)
 
     # Default configuration
     default_config = {
