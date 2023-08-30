@@ -2,6 +2,37 @@
 
 
 
+## v1.2.10 (2023-08-30)
+
+### Chore
+
+* chore(ci): update dist_exists value ([`19c9619`](https://github.com/timmyb824/python-SysInformer/commit/19c9619a1820cb21c8cf49223555ee38245e5212))
+
+* chore(ci): add dist folder check before publishing ([`5fb6479`](https://github.com/timmyb824/python-SysInformer/commit/5fb6479e95402c749e509b9498189371817a088c))
+
+* chore(ci): remove unnecessary if conditions ([`50f6945`](https://github.com/timmyb824/python-SysInformer/commit/50f6945ad3e7deea4f7e5d463cc13bcecdd5ad8c))
+
+* chore(ci): add semantic release exit code echo ([`8cc4308`](https://github.com/timmyb824/python-SysInformer/commit/8cc43085aea1a59435bc10540ba889997f2c78db))
+
+* chore(ci): remove unused Python Semantic Release step ([`2c8cb91`](https://github.com/timmyb824/python-SysInformer/commit/2c8cb91d3bfbd39170ce3797a6cd17ce618410a3))
+
+### Documentation
+
+* docs: Remove unnecessary information from README and config.yaml ([`25fde9f`](https://github.com/timmyb824/python-SysInformer/commit/25fde9f1773aaecd95683766932c3b8c74611a7c))
+
+### Unknown
+
+* Merge pull request #46 from timmyb824/ci/fix-ci-versioning10 ([`9ae083b`](https://github.com/timmyb824/python-SysInformer/commit/9ae083b439f0d270fe597d6731437bf6cec689b5))
+
+* Merge pull request #45 from timmyb824/ci/fix-ci-versioning9 ([`de7c0a1`](https://github.com/timmyb824/python-SysInformer/commit/de7c0a1cf0a5d7ad55a7b0259fd6388272323069))
+
+* Merge pull request #44 from timmyb824/ci/fix-ci-versioning8 ([`66b23ee`](https://github.com/timmyb824/python-SysInformer/commit/66b23eefcac44b470216daa4464bfe7384483d12))
+
+* Merge pull request #43 from timmyb824/ci/fix-ci-versioning7 ([`64399c6`](https://github.com/timmyb824/python-SysInformer/commit/64399c6fa49c48ebd08c5c9d0ca46853169a6cc8))
+
+* Merge pull request #42 from timmyb824/ci/fix-ci-versioning6 ([`73ba93c`](https://github.com/timmyb824/python-SysInformer/commit/73ba93c8dd94e2f3d24b4ee90d6c5c33a32edc69))
+
+
 ## v1.2.9 (2023-08-29)
 
 ### Ci
