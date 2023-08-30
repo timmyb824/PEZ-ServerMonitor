@@ -112,7 +112,7 @@ jobs:
           if [ -d "dist/" ] && [ "$(ls -A dist/)" ]; then
             echo "DIST_EXISTS=true" >> $GITHUB_OUTPUT
           else
-            echo "DIST_EXISTS=true" >> $GITHUB_OUTPUT
+            echo "DIST_EXISTS=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Publish to TestPyPI
