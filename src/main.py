@@ -82,7 +82,7 @@ def run(**kwargs):
 @click.option(
     "--config-path",
     default=CONFIG_PATH_DEFAULT,
-    help="The path to the config file (default: ~/.config/p/confsiig.yaml)",
+    help="The path to the config file (default: ~/.config/psi/config.yaml)",
 )
 def create_config(create, config_path):
     """The config command is used to create a default config file."""
