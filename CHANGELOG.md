@@ -2,6 +2,17 @@
 
 
 
+## v1.2.13 (2023-08-31)
+
+### Fix
+
+* fix: add click dependency ([`9beba8b`](https://github.com/timmyb824/python-SysInformer/commit/9beba8b49d8f9e0e27b275a524252962422fb886))
+
+### Unknown
+
+* Merge pull request #49 from timmyb824/fix/missing-click-dep ([`3b1d8bf`](https://github.com/timmyb824/python-SysInformer/commit/3b1d8bfdcc957ec6816ff6f3fc0f1eb6218d1542))
+
+
 ## v1.2.12 (2023-08-30)
 
 ### Fix
