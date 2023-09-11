@@ -48,14 +48,14 @@ psi = "src.main:cli"
 allowed_tags = [
     "build",
     "chore",
-    "ci",
-    "docs",
-    "feat",
+    "refactor",
     "fix",
     "perf",
     "style",
-    "refactor",
+    "docs",
+    "ci",
     "test",
+    "feat",
     ":boom:",
 ]
 major_tags = [":boom:"]
@@ -70,7 +70,7 @@ branch = "main"
 changelog_file = "CHANGELOG.md"
 build_command = "poetry build"
 dist_path = "dist/"
-upload_to_release = true
+upload_to_vcs_release = true
 upload_to_pypi = false
 remove_dist = false
 patch_without_tag = true
