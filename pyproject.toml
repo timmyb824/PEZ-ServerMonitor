@@ -57,8 +57,9 @@ allowed_tags = [
     "test",
     "feat",
     ":boom:",
+    "BREAKING_CHANGE",
 ]
-major_tags = [":boom:"]
+major_tags = [":boom:", "BREAKING_CHANGE"]
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf", "style", "docs", "ci", "test"]
 
