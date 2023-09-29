@@ -2,6 +2,28 @@
 
 
 
+## v1.2.14 (2023-09-29)
+
+### Chore
+
+* chore(pyproject): update python dependency version to &gt;=3.9 for compatibility
+chore(requirements): update python dependency version to &gt;=3.9 for compatibility ([`817bf1d`](https://github.com/timmyb824/python-SysInformer/commit/817bf1dea99296843207e1487f9c8ea75b1b70ee))
+
+* chore: add new hook ripsecrets and other tweaks to the configs ([`67d4f35`](https://github.com/timmyb824/python-SysInformer/commit/67d4f359066efb0352fb180b0d47a4f9265a215d))
+
+### Ci
+
+* ci: add breaking change commit type ([`83ccb5e`](https://github.com/timmyb824/python-SysInformer/commit/83ccb5ea907d6b381e7af0282cff45fb38148133))
+
+### Unknown
+
+* Merge pull request #52 from timmyb824/ci/force-vesion-update ([`2c5eb25`](https://github.com/timmyb824/python-SysInformer/commit/2c5eb25b1ae803a67b1fa913a0297f6ab1777004))
+
+* Merge pull request #51 from timmyb824/chore/update-python-version ([`0995ec4`](https://github.com/timmyb824/python-SysInformer/commit/0995ec434c9f18e84aa006501336d01df17f5829))
+
+* Merge pull request #50 from timmyb824/chore/add-pre-commit-hook ([`5f03dcf`](https://github.com/timmyb824/python-SysInformer/commit/5f03dcfa713977ce7949e3df8e9fa151c92c3ed8))
+
+
 ## v1.2.13 (2023-08-31)
 
 ### Fix
