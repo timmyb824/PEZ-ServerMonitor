@@ -2,6 +2,28 @@
 
 
 
+## v1.2.15 (2023-11-26)
+
+### Chore
+
+* chore(.pre-commit-config): update sourcery version to v1.11.0
+chore(.pre-commit-config): update pre-commit-hooks version to v4.5.0
+chore(.pre-commit-config): update black version to 23.10.1
+chore(.pre-commit-config): update ripsecrets version to v0.1.7
+chore(pyproject): update sourcery version to v1.11.0
+chore(requirements): update psutil version to 5.9.6 ([`b427b22`](https://github.com/timmyb824/python-SysInformer/commit/b427b228b1d0f4fcf9c834a99e75aec813c98acc))
+
+### Ci
+
+* ci: add trufflehog pre-commit and other updates
+
+git commit -m chore(.pre-commit-config.yaml): update sourcery version to v1.14.0
+chore(.pre-commit-config.yaml): update black version to 23.11.0
+chore(.pre-commit-config.yaml): update poetry version to 1.7.0
+chore(.pre-commit-config.yaml): update conventional-pre-commit version to v3.0.0
+feat(.pre-commit-config.yaml): add trufflehog hook to detect secrets in the code during commit stage ([`5da0858`](https://github.com/timmyb824/python-SysInformer/commit/5da085897e070301f88ee48d9bba02ec9dffa658))
+
+
 ## v1.2.14 (2023-09-29)
 
 ### Chore
