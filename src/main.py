@@ -28,14 +28,14 @@ DISPATCH = {
 }
 
 
-def check_os() -> None:
-    """Checks if the OS is supported."""
-    current_os = platform.system()
-    if current_os in ("Windows", "Darwin"):
-        print_title_red(
-            f"{current_os} OS is not fully supported yet. Results may vary."
-        )
-        time.sleep(2)
+# def check_os() -> None:
+#     """Checks if the OS is supported."""
+#     current_os = platform.system()
+#     if current_os in ("Windows", "Darwin"):
+#         print_title_red(
+#             f"{current_os} OS is not fully supported yet. Results may vary."
+#         )
+#         time.sleep(2)
 
 
 # The main group for the CLI
@@ -104,7 +104,7 @@ def print_all_info(config_path: str) -> None:
     Args:
         config_file (str): The path to the config file.
     """
-    check_os()
+    # check_os()
     print_system_info()
     print_cpu_info()
     print_cpu_usage_info()
