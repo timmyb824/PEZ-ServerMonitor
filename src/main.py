@@ -3,7 +3,7 @@ import time
 
 import click
 
-from src.config.constants import CONFIG_PATH_DEFAULT
+from src.constants import CONFIG_PATH_DEFAULT
 from src.config.default_config import write_default_config
 from src.core.containers import print_running_containers
 from src.core.cpu import print_cpu_info
