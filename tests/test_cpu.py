@@ -120,6 +120,7 @@ def test_get_process_count(mock_pids, process_count, expected_output):
     assert result == expected_output
 
 
+# TODO: This test is broken. Fix it.
 @pytest.mark.parametrize(
     "os_type,temps,expected_output",
     [
