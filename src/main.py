@@ -1,6 +1,3 @@
-import platform
-import time
-
 import click
 
 from src.constants import CONFIG_PATH_DEFAULT
@@ -14,7 +11,7 @@ from src.core.networking import print_network_info
 from src.core.processes import print_cpu_usage_info, print_memory_usage_info
 from src.core.services import print_process_info
 from src.core.system import print_system_info
-from src.utilities.utils import print_title_red
+
 
 DISPATCH = {
     "all": lambda config: print_all_info(config),
@@ -42,6 +39,21 @@ DISPATCH = {
 @click.group()
 def cli():
     """System information tool."""
+
+
+# The version command
+@cli.command(name="version")
+def print_version():
+    """Prints the version of the tool."""
+    # version = pkg_resources.get_distribution('python-sysinformer').version
+    # use importlib.resources to get the version
+    try:
+        from importlib.metadata import version  # pylint: disable=import-outside-toplevel
+
+        psi_version = version("python-sysinformer")
+        print(f"psi version {psi_version}")
+    except ImportError:
+        print("importlib.metadata not found")
 
 
 @cli.command(name="run")

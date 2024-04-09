@@ -71,8 +71,9 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  config  The config command is used to create a default config file.
-  run     The run command is the main command for the tool.
+  config   The config command is used to create a default config file.
+  run      The run command is the main command for the tool.
+  version  Prints the version of the tool.
 ```
 
 The most basic usage to retrieve all information is:
