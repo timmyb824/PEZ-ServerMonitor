@@ -2,6 +2,15 @@
 
 
 
+## v1.5.0 (2024-04-09)
+
+### Feature
+
+* feat(core/memory.py): add support for retrieving memory information on macOS using &#39;vm_stat&#39; and &#39;sysctl&#39; commands
+feat(core/memory.py): implement function to parse &#39;vm_stat&#39; output for macOS memory info
+feat(test_memory.py): add tests for calculate_memory_usage and parse_vm_stat_output functions ([`38e9970`](https://github.com/timmyb824/python-SysInformer/commit/38e9970db2ddb6fc566dba890de0c11a8f0d745d))
+
+
 ## v1.4.0 (2024-04-09)
 
 ### Feature
