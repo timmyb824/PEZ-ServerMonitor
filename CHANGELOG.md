@@ -2,6 +2,43 @@
 
 
 
+## v1.3.0 (2024-04-09)
+
+### Build
+
+* build: Update GitHub Actions setup-python and cache actions to latest versions ([`b9fcc65`](https://github.com/timmyb824/python-SysInformer/commit/b9fcc65144894b14c263a150ae055a06b36f9c7f))
+
+### Chore
+
+* chore: Update test_cpu.py to fix broken test ([`04713c1`](https://github.com/timmyb824/python-SysInformer/commit/04713c17f44176204014d27506fadda894193a2a))
+
+### Feature
+
+* feat(constants.py): add constants file with common paths and URLs for better organization and reusability
+refactor(containers.py): update print_running_containers function to handle empty containers list case
+refactor(cpu.py): improve get_cpu_cache_and_bogomips function to provide clearer messages and handle macOS cache retrieval
+refactor(cpu.py): update print_cpu_info function to only print CPU temperature on Linux systems
+refactor(networking.py): update import statement for GET_WAN_IP constant
+refactor(main.py): update import statement for CONFIG_PATH_DEFAULT constant
+
+feat(test_cpu.py): add tests for get_cpu_cache_and_bogomips, get_cpu_info, get_cpu_usage, get_load_average, get_process_count, get_system_temperature functions to improve code coverage and ensure functionality ([`4feba54`](https://github.com/timmyb824/python-SysInformer/commit/4feba54edde0742afa3dc4d742151d4a5fbb1e6e))
+
+### Refactor
+
+* refactor(system.py): refactor get_system_info function to improve readability and maintainability
+feat(system.py): add support for macOS last boot time retrieval and system uptime calculation
+feat(system.py): add function to count user directories in Unix systems
+feat(main.py): comment out check_os function to prevent unnecessary output and delay
+
+feat(test_system.py): refactor test_system.py to use pytest fixtures and improve test readability and maintainability ([`e33d9a1`](https://github.com/timmyb824/python-SysInformer/commit/e33d9a1d506e476bc513f73decb8a4771745d99e))
+
+### Unknown
+
+* Merge pull request #53 from timmyb824/feat/add-support-for-macos
+
+refactor(system.py): refactor get_system_info function to improve rea… ([`846520f`](https://github.com/timmyb824/python-SysInformer/commit/846520fd9892c2bf490b5803263431541268d180))
+
+
 ## v1.2.15 (2023-11-26)
 
 ### Chore
