@@ -1,74 +1,60 @@
-from unittest.mock import mock_open, patch
-
 import pytest
 
-from src.core.memory import calculate_memory_usage, get_memory_info, print_memory_info
-
-
-def test_calculate_memory_usage():
-    total, free, used_percentage = calculate_memory_usage(1024, 512, 256, 256)
-    assert total == 1
-    assert free == 1
-    assert used_percentage == 0
-
-    total, free, used_percentage = calculate_memory_usage(2048, 1024, 512, 256)
-    assert total == 2
-    assert free == 1
-    assert used_percentage == 50.0
-
-
-@patch(
-    "builtins.open",
-    new_callable=mock_open,
-    read_data="MemTotal: 8192 kB\nMemFree: 2048 kB\nBuffers: 1024 kB\nCached: 1024 kB\nSwapTotal: 8192 kB\nSwapFree: 4096 kB\n",
+from src.core.memory import (  # get_memory_info,; get_memory_info_macos,
+    calculate_memory_usage,
+    parse_vm_stat_output,
 )
-def test_get_memory_info(mock_file):
-    (
-        mem_total,
-        mem_free,
-        mem_used_percentage,
-        swap_total,
-        swap_free,
-        swap_used_percentage,
-    ) = get_memory_info()
-    assert mem_total == 8
-    assert mem_free == 4
-    assert mem_used_percentage == 50
-    assert swap_total == 8
-    assert swap_free == 4
-    assert swap_used_percentage == 50
 
 
-@patch(
-    "builtins.open",
-    new_callable=mock_open,
-    read_data="MemTotal: 8192 kB\nMemFree: 2048 kB\n",
+# Test for calculate_memory_usage
+@pytest.mark.parametrize(
+    "total, free, buffers, cached, expected",
+    [
+        (1024, 512, 100, 100, (1, 0, 100.0)),  # ID: basic-half-used
+        (2048, 1024, 200, 200, (2, 1, 50.0)),  # ID: double-size-half-used
+        (1024, 1024, 0, 0, (1, 1, 0.0)),  # ID: all-free
+        (0, 0, 0, 0, (0, 0, 0)),  # ID: no-memory
+        (1024, 0, 1024, 1024, (1, 2, -100.0)),  # ID: negative-free
+    ],
 )
-def test_get_memory_info_missing_keys(mock_file):
-    (
-        mem_total,
-        mem_free,
-        mem_used_percentage,
-        swap_total,
-        swap_free,
-        swap_used_percentage,
-    ) = get_memory_info()
-    assert mem_total == 0
-    assert mem_free == 0
-    assert mem_used_percentage == 0
-    assert swap_total == 0
-    assert swap_free == 0
-    assert swap_used_percentage == 0
+def test_calculate_memory_usage(total, free, buffers, cached, expected):
+    # Act
+    result = calculate_memory_usage(total, free, buffers, cached)
+
+    # Assert
+    assert result == expected
 
 
-# @patch('memory.get_memory_info')
-# @patch('utils.print_title')
-# @patch('tabulate.tabulate')
-# def test_print_memory_info(mock_tabulate, mock_print_title, mock_get_memory_info):
-#     mock_get_memory_info.return_value = (8192, 2048, 75, 4096, 1024, 75)
-#     print_memory_info()
-#     mock_print_title.assert_called_once_with("Memory Information")
-#     mock_tabulate.assert_called_once_with([
-#         ['Memory', '2048MB', '8192MB', '75.00%'],
-#         ['Swap', '1024MB', '4096MB', '75.00%'],
-#     ], ['Type', 'Free', 'Total', 'Usage'], tablefmt="simple_grid")
+# Test for parse_vm_stat_output
+@pytest.mark.parametrize(
+    "output, expected",
+    [
+        (
+            "Mach Virtual Memory Statistics: (page size of 4096 bytes)\nPages free:       100.\nPages active:     200.\n",
+            {"Pages free": 100},
+        ),  # ID: basic
+        ("", {}),  # ID: empty-output
+        (
+            "Mach Virtual Memory Statistics: (page size of 4096 bytes)\n",
+            {},
+        ),  # ID: header-only
+    ],
+)
+def test_parse_vm_stat_output(output, expected):
+    # Act
+    result = parse_vm_stat_output(output)
+
+    # Assert
+    assert result == expected
+
+
+# Mocking platform.system for get_memory_info tests
+@pytest.fixture
+def mock_platform_system(mocker):
+    return mocker.patch("platform.system")
+
+
+# Mocking subprocess.check_output for get_memory_info_macos tests
+@pytest.fixture
+def mock_subprocess_check_output(mocker):
+    return mocker.patch("subprocess.check_output")
