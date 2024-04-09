@@ -2,6 +2,21 @@
 
 
 
+## v1.4.0 (2024-04-09)
+
+### Feature
+
+* feat: Add version command to tool&#39;s CLI options ([`6f0a575`](https://github.com/timmyb824/python-SysInformer/commit/6f0a575f738d401ef219463bb3cdf7f8ac43fb32))
+
+* feat: Add version command to print tool&#39;s version ([`a0f251c`](https://github.com/timmyb824/python-SysInformer/commit/a0f251c682471dbb0435f01451cfc9f673894a51))
+
+### Unknown
+
+* Merge pull request #54 from timmyb824/feat/add-version-cmd
+
+feat: Add version command to print tool&#39;s version ([`61ee675`](https://github.com/timmyb824/python-SysInformer/commit/61ee6758d87410f68db329312504d8bec5b86337))
+
+
 ## v1.3.0 (2024-04-09)
 
 ### Build
