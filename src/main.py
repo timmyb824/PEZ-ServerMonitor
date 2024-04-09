@@ -3,7 +3,7 @@ import time
 
 import click
 
-from src.config.constants import CONFIG_PATH_DEFAULT
+from src.constants import CONFIG_PATH_DEFAULT
 from src.config.default_config import write_default_config
 from src.core.containers import print_running_containers
 from src.core.cpu import print_cpu_info
@@ -28,14 +28,14 @@ DISPATCH = {
 }
 
 
-def check_os() -> None:
-    """Checks if the OS is supported."""
-    current_os = platform.system()
-    if current_os in ("Windows", "Darwin"):
-        print_title_red(
-            f"{current_os} OS is not fully supported yet. Results may vary."
-        )
-        time.sleep(2)
+# def check_os() -> None:
+#     """Checks if the OS is supported."""
+#     current_os = platform.system()
+#     if current_os in ("Windows", "Darwin"):
+#         print_title_red(
+#             f"{current_os} OS is not fully supported yet. Results may vary."
+#         )
+#         time.sleep(2)
 
 
 # The main group for the CLI
@@ -104,7 +104,7 @@ def print_all_info(config_path: str) -> None:
     Args:
         config_file (str): The path to the config file.
     """
-    check_os()
+    # check_os()
     print_system_info()
     print_cpu_info()
     print_cpu_usage_info()

@@ -117,12 +117,14 @@ def print_running_containers() -> None:
     print_title("Container Information")
     if container_tool := check_docker_or_podman():
         containers = get_running_containers(container_tool)
-        if containers is not None:
+        if containers == []:
+            print(f"No {container_tool} containers are running on your system.")
+        elif containers:
             print(f"{container_tool.capitalize()} containers running on your system:")
             print(
                 tabulate(
                     containers,
-                    headers=["ID", "Names", "PortMappings", "Status"],
+                    headers=["ID", "Name", "PortMappings", "Status"],
                     tablefmt="simple_grid",
                 )
             )

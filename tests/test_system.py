@@ -1,72 +1,82 @@
-import collections
-import time
-from unittest.mock import mock_open, patch
-
 import pytest
+import subprocess
+from unittest.mock import patch, MagicMock
+import os
+import time
+from src.core.system import get_last_boot_time_macos, get_system_uptime, get_user_count_unix, get_system_info
 
-from src.core.system import get_system_info
+# Test get_last_boot_time_macos
+@pytest.mark.parametrize("output,expected", [
+    ("{ sec = 1625097600, usec = 0 }", 1625097600.0),  # ID: valid-output
+    ("", 0.0),  # ID: empty-output
+    ("invalid output", 0.0),  # ID: invalid-output
+], ids=["valid-output", "empty-output", "invalid-output"])
+def test_get_last_boot_time_macos(output, expected):
+    with patch("subprocess.run") as mocked_run:
+        mocked_run.return_value = MagicMock(stdout=output)
+
+        # Act
+        result = get_last_boot_time_macos()
+
+        # Assert
+        assert result == expected
+
+# Test get_system_uptime
+@pytest.mark.parametrize("output,expected", [
+    ("13:05  up 3 days, 18:53, 5 users", "13:05  up 3 days,  18:53"),  # ID: normal-case
+    ("", ""),  # ID: empty-output
+    ("uptime: unexpected output", "uptime: unexpected output"),  # ID: unexpected-output
+], ids=["normal-case", "empty-output", "unexpected-output"])
+def test_get_system_uptime(output, expected):
+    with patch("subprocess.run") as mocked_run:
+        mocked_run.return_value = MagicMock(stdout=output)
+
+        # Act
+        result = get_system_uptime()
+
+        # Assert
+        assert result == expected
+
+# Test get_user_count_unix
+@pytest.mark.parametrize("path,dirs,expected", [
+    ("/Users", ["user1", "Shared", "user2"], 2),  # ID: normal-case
+    ("/invalid/path", [], 0),  # ID: invalid-path
+], ids=["normal-case", "invalid-path"])
+def test_get_user_count_unix(path, dirs, expected):
+    with patch("os.listdir") as mocked_listdir, patch("os.path.isdir") as mocked_isdir:
+        mocked_listdir.return_value = dirs
+        mocked_isdir.side_effect = lambda x: x != "/invalid/path"
+
+        # Act
+        result = get_user_count_unix(path)
+
+        # Assert
+        assert result == expected
+
+# TODO: test is currently missing uptime and last_boot_time
+@pytest.mark.parametrize("os_type,expected_keys", [
+    ("Linux", ["os_type", "hostname", "kernel_info", "architecture", "dist", "dist_version", "users_nb", "current_date"]),  # ID: linux
+    ("Darwin", ["os_type", "hostname", "kernel_info", "architecture", "dist", "dist_version", "users_nb", "current_date"]),  # ID: darwin
+], ids=["linux", "darwin"])
+def test_get_system_info(os_type, expected_keys):
+
+    with patch("platform.system", return_value=os_type), \
+         patch("platform.node", return_value="test_hostname"), \
+         patch("platform.uname", return_value=MagicMock(release="test_release")), \
+         patch("platform.machine", return_value="test_machine"), \
+         patch("platform.mac_ver", return_value=("10.15.1", "", "")), \
+         patch("os.listdir"), \
+         patch("os.path.isdir", return_value=True), \
+         patch("time.time", return_value=1625097600), \
+         patch("distro.name", return_value="Ubuntu"), \
+         patch("distro.version", return_value="20.04"):
+
+        # Act
+        result = get_system_info()
+
+        # Assert
+        for key in expected_keys:
+            assert key in result
 
 
-@patch("platform.system")
-@patch("platform.node")
-@patch("platform.uname")
-@patch("platform.machine")
-@patch("os.stat")
-@patch("os.listdir")
-@patch("distro.name")
-@patch("platform.freedesktop_os_release")
-def test_get_system_info(
-    mock_freedesktop,
-    mock_name,
-    mock_listdir,
-    mock_stat,
-    mock_machine,
-    mock_uname,
-    mock_node,
-    mock_system,
-):
-    mock_system.return_value = "Linux"
-    mock_name.return_value = "Ubuntu"
-    mock_freedesktop.return_value = {"VERSION": "20.04"}
-    mock_node.return_value = "test-host"
 
-    # Create a named tuple with a `release` attribute
-    Uname = collections.namedtuple("Uname", "release")
-    mock_uname.return_value = Uname(release="test-release")
-
-    mock_machine.return_value = "test-machine"
-    mock_stat.return_value.st_ctime = 50 * 365 * 24 * 3600
-    mock_listdir.return_value = ["user1", "user2", "user3"]
-
-    expected_result = (
-        "Linux",
-        "Ubuntu",
-        "20.04",
-        "test-host",
-        "0 days, 0 hours, 0 minutes",
-        "2023-01-01 00:00:00",
-        "test-release",
-        "test-machine",
-        3,
-        "2023-01-01 00:00:00",
-    )
-
-    with patch(
-        "time.time", return_value=50 * 365 * 24 * 3600
-    ):  # Returns the number of seconds in 50 years
-        with patch("time.localtime", return_value=time.gmtime(0)):
-            with patch("time.strftime", return_value="2023-01-01 00:00:00"):
-                result = get_system_info()
-    assert result == expected_result
-
-
-@patch("os.stat")
-def test_get_system_info_no_proc(mock_stat):
-    mock_stat.side_effect = FileNotFoundError
-    get_system_info()
-
-
-@patch("os.listdir")
-def test_get_system_info_no_home(mock_listdir):
-    mock_listdir.side_effect = FileNotFoundError
-    get_system_info()

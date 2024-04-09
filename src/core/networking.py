@@ -4,7 +4,7 @@ import netifaces
 import psutil
 from tabulate import tabulate
 
-from src.config.constants import GET_WAN_IP
+from src.constants import GET_WAN_IP
 from src.utilities.utils import print_title
 
 
