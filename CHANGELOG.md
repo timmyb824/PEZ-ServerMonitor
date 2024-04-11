@@ -2,6 +2,32 @@
 
 
 
+## v1.6.0 (2024-04-11)
+
+### Chore
+
+* chore(.gitignore): add .plandex/ and PLANDEX.md to the .gitignore file
+feat(cpu.py): add function to get CPU processor information and refactor get_cpu_info
+feat(memory.py): add function to get total memory usage of all processes on macOS
+feat(memory.py): add function to show warning message for macOS memory calculation ([`c24797e`](https://github.com/timmyb824/python-SysInformer/commit/c24797e13f5f985a012134ec15a455ac864e344d))
+
+### Documentation
+
+* docs: Update installation instructions with pyenv upgrade tip ([`b64914f`](https://github.com/timmyb824/python-SysInformer/commit/b64914ffd776bf00ceff74cab223ff6ed07f05b1))
+
+### Feature
+
+* feat(test_cpu.py): add platform check for Intel and Apple M3 Pro processors to skip tests if not running on the required processor
+refactor(test_cpu.py): improve parametrize ids for better readability
+refactor(test_memory.py): remove unused parse_vm_stat_output function to clean up codebase ([`f7f6170`](https://github.com/timmyb824/python-SysInformer/commit/f7f6170ee3f3e587b4e86cb792e7e5ee605cf43c))
+
+### Unknown
+
+* Merge pull request #55 from timmyb824/refactor/improve-macos-mem
+
+refactor/improve macos mem ([`12ebf9a`](https://github.com/timmyb824/python-SysInformer/commit/12ebf9ad92779f0cb484ffc2b31a868d6cb6af63))
+
+
 ## v1.5.0 (2024-04-09)
 
 ### Feature
