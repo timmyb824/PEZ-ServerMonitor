@@ -19,7 +19,7 @@ The following gif demonstrates some of the tool's features:
 
 ### Prerequisites
 
-The tool requires Python 3.11 or higher. Additionally, the tool is inteneded to be used on Linux systems only. It will work on macOS systems, but may not be able to retrieve all information. The tool is not intended to be used on Windows systems.
+The tool requires Python 3.11 or higher. Additionally, the tool is inteneded to be used on Linux and macOS systems. The tool is not intended to be used on Windows systems.
 
 ## Dependencies
 
