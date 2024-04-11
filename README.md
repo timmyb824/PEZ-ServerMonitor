@@ -38,6 +38,9 @@ The easiest way to install the tool is with `pip`:
 
 ```bash
   pip install python-SysInformer
+
+  # if using pyenv - upgrade the tool with to avoid potential cache issues:
+  pip install --upgrade python-SysInformer --force-reinstall
 ```
 
 Additionaly, if you have [poetry](https://python-poetry.org/) installed you can install the tool with:

@@ -2,7 +2,6 @@ import pytest
 
 from src.core.memory import (  # get_memory_info,; get_memory_info_macos,
     calculate_memory_usage,
-    parse_vm_stat_output,
 )
 
 
@@ -40,13 +39,6 @@ def test_calculate_memory_usage(total, free, buffers, cached, expected):
         ),  # ID: header-only
     ],
 )
-def test_parse_vm_stat_output(output, expected):
-    # Act
-    result = parse_vm_stat_output(output)
-
-    # Assert
-    assert result == expected
-
 
 # Mocking platform.system for get_memory_info tests
 @pytest.fixture

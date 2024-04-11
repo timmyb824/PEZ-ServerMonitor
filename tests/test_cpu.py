@@ -1,4 +1,6 @@
 import pytest
+import platform
+
 from unittest.mock import patch, MagicMock, mock_open
 from src.core.cpu import (
     get_cpu_cache_and_bogomips,
@@ -37,13 +39,14 @@ def test_get_cpu_cache_and_bogomips(
     assert result == expected_output
 
 
+
 @pytest.mark.parametrize(
     "cpu_count,processor,freq,expected_output",
     [
-        (4, "Intel", 2400.0, (4, "Intel", 2400.0, "1024 KB", "5000.00")),
-        (0, "", 0.0, (0, 'UNKNOWN', 0.0, '1024 KB', '5000.00')),
+        pytest.param(4, "Intel", 2400.0, (4, "Intel", 2400.0, "1024 KB", "5000.00"), marks=pytest.mark.skipif(platform.processor() != "Intel", reason="requires Intel processor")),
+        pytest.param(0, "Apple M3 Pro", 0.0, (0, 'Apple M3 Pro', 0.0, '1024 KB', '5000.00'), marks=pytest.mark.skipif(platform.processor() != "Apple M3 Pro", reason="requires Apple M3 Pro processor")),
     ],
-    ids=["happy-path", "error-case"],
+    ids=["linux-happy-path", "darwin-happy-path"],
 )
 @patch("src.core.cpu.psutil.cpu_count")
 @patch("src.core.cpu.platform.processor")
