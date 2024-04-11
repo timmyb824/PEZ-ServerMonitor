@@ -2,6 +2,7 @@ import platform
 import re
 import subprocess
 
+from typing import Literal, Optional
 from tabulate import tabulate
 
 from src.utilities.utils import print_title
@@ -29,7 +30,18 @@ def calculate_memory_usage(
     return total, free, used_percentage
 
 
-def get_memory_info() -> tuple[int, int, float, int, int, float]:
+def format_memory_value(value_in_mb: float) -> str:
+    """Formats memory values to display in MB or GB as appropriate."""
+    if value_in_mb > 1000:
+        return f"{value_in_mb / 1024:.2f}GB"
+    else:
+        return f"{value_in_mb}MB"
+
+
+def get_memory_info() -> (
+    tuple[str, str, float | Literal[0], str, str, float | Literal[0]]
+):
+    """Get memory information"""
     if platform.system() == "Darwin":
         return get_memory_info_macos()
     elif platform.system() == "Linux":
@@ -40,14 +52,14 @@ def get_memory_info() -> tuple[int, int, float, int, int, float]:
             }
         except (FileNotFoundError, PermissionError):
             # print(f"Error reading file '/proc/meminfo': {exception}")
-            return (0, 0, 0, 0, 0, 0)
+            return ("0MB", "0MB", 0, "0MB", "0MB", 0)
 
         keys = ["MemTotal", "MemFree", "Buffers", "Cached", "SwapTotal", "SwapFree"]
         if any(key not in mem_info for key in keys):
             print("Not all keys found in '/proc/meminfo'")
-            return (0, 0, 0, 0, 0, 0)
+            return ("0MB", "0MB", 0, "0MB", "0MB", 0)
 
-        mem_total, mem_free, mem_used_percentage = calculate_memory_usage(
+        total_memory, mem_free, mem_used_percentage = calculate_memory_usage(
             mem_info["MemTotal"],
             mem_info["MemFree"],
             mem_info["Buffers"],
@@ -59,61 +71,90 @@ def get_memory_info() -> tuple[int, int, float, int, int, float]:
         )
 
         return (
-            mem_total,
-            mem_free,
+            format_memory_value(total_memory),
+            format_memory_value(mem_free),
             mem_used_percentage,
-            swap_total,
-            swap_free,
+            format_memory_value(swap_total),
+            format_memory_value(swap_free),
             swap_used_percentage,
         )
     else:
-        return (0, 0, 0, 0, 0, 0)
+        return ("0MB", "0MB", 0, "0MB", "0MB", 0)
 
 
-def get_memory_info_macos() -> tuple[int, int, float, int, int, float]:
+def get_total_memory_of_all_processes() -> float:
+    """
+    Get the total memory usage of all processes on macOS.
+
+    Returns:
+        int: Total memory usage of all processes in MB.
+    """
+    # Get process info
+    ps = (
+        subprocess.Popen(["ps", "-caxm", "-orss,comm"], stdout=subprocess.PIPE)
+        .communicate()[0]
+        .decode()
+    )
+
+    # Iterate processes
+    process_lines = ps.split("\n")
+    sep = re.compile(r"[\s]+")
+    ps_total = 0  # kB
+    for row in range(1, len(process_lines)):
+        row_text = process_lines[row].strip()
+        row_elements = sep.split(row_text)
+        try:
+            rss = float(row_elements[0]) * 1024
+        except (ValueError, IndexError):
+            rss = 0  # ignore...
+        ps_total += rss
+    return ps_total / 1024 / 1024 or 0
+
+
+def get_memory_info_macos() -> (
+    tuple[str, str, float | Literal[0], str, str, float | Literal[0]]
+):
     """Get memory information on macOS"""
     try:
-        vm_stat_output = subprocess.check_output(["vm_stat"]).decode()
         sysctl_output = subprocess.check_output(["sysctl", "-n", "hw.memsize"]).decode()
     except (subprocess.CalledProcessError, PermissionError):
-        return (0, 0, 0, 0, 0, 0)
+        return ("0MB", "0MB", 0, "0MB", "0MB", 0)
 
-    vm_stats = parse_vm_stat_output(vm_stat_output)
     total_memory = int(sysctl_output.strip()) // (1024 * 1024)  # Convert bytes to MB
 
-    mem_free = vm_stats.get("Pages free", 0) // 256  # Convert pages to MB
+    mem_usage_process = get_total_memory_of_all_processes()
+    mem_free = round(total_memory - mem_usage_process)
     mem_used_percentage = (
         ((total_memory - mem_free) / total_memory) * 100 if total_memory != 0 else 0
     )
 
-    swap_total = vm_stats.get("Swapins", 0) // 256  # Convert pages to MB
-    swap_free = (
-        vm_stats.get("Swapins", 0) - vm_stats.get("Swapouts", 0)
-    ) // 256  # Convert pages to MB
+    swap_output = subprocess.check_output(["sysctl", "-n", "vm.swapusage"]).decode()
+    swap_stats = {
+        k: float(v.replace("M", ""))
+        for k, v in re.findall(r"(\w+) = (\d+\.?\d*)M", swap_output)
+    }
+    swap_total = swap_stats.get("total", 0)  # Already in MB
+    swap_free = swap_stats.get("free", 0)  # Already in MB
     swap_used_percentage = (
         ((swap_total - swap_free) / swap_total) * 100 if swap_total != 0 else 0
     )
 
     return (
-        total_memory,
-        mem_free,
+        format_memory_value(total_memory),
+        format_memory_value(mem_free),
         mem_used_percentage,
-        swap_total,
-        swap_free,
+        format_memory_value(swap_total),
+        format_memory_value(swap_free),
         swap_used_percentage,
     )
 
+def show_warning_msg() -> Optional[str]:
+    """
+    Print the macOS warning message
+    """
+    if platform.system() == "Darwin":
+        return "\033[1mWARNING\033[0m: memory usage of all processes used to calculate free memory on macOS"
 
-def parse_vm_stat_output(output: str) -> dict:
-    """Parse the output of the 'vm_stat' command on macOS."""
-    vm_stats = {}
-    lines = output.split("\n")
-    sep = re.compile(r":[\s]+")
-    for line in lines[1:-2]:
-        line = line.strip()
-        key, value = sep.split(line)
-        vm_stats[key] = int(value.strip("."))
-    return vm_stats
 
 
 def print_memory_info() -> None:
@@ -131,11 +172,12 @@ def print_memory_info() -> None:
     ) = get_memory_info()
 
     table = [
-        ["Memory", f"{mem_free}MB", f"{mem_total}MB", f"{mem_used_percentage:.2f}%"],
-        ["Swap", f"{swap_free}MB", f"{swap_total}MB", f"{swap_used_percentage:.2f}%"],
+        ["Memory", f"{mem_free}", f"{mem_total}", f"{mem_used_percentage:.2f}%"],
+        ["Swap", f"{swap_free}", f"{swap_total}", f"{swap_used_percentage:.2f}%"],
     ]
 
     headers = ["Type", "Free", "Total", "Usage"]
 
     print_title("Memory Information")
+    print(show_warning_msg())
     print(tabulate(table, headers, tablefmt="simple_grid"))

@@ -52,7 +52,33 @@ def get_cpu_cache_and_bogomips() -> tuple[str, str]:
     return cpu_cache, cpu_bogomips
 
 
+def get_cpu_processor_info() -> str:
+    """
+    Gets the CPU processor information.
+
+    Returns:
+    str: The CPU processor information.
+    """
+    os_type = platform.system()
+    try:
+        if os_type == platform.system() == "Linux":
+            cpu_info = platform.processor() or "UNKNOWN"
+        elif os_type == "Darwin":
+            cpu_info = subprocess.run(
+                ["sysctl", "-n", "machdep.cpu.brand_string"],
+                capture_output=True,
+                check=True,
+                text=True,
+            ).stdout.strip() or "UNKNOWN"
+        else:
+            cpu_info = "UNKNOWN"
+    except (subprocess.SubprocessError, FileNotFoundError):
+        cpu_info = "UNKNOWN"
+    return cpu_info
+
+
 def get_cpu_info() -> tuple[int, str, Union[float, Literal["Unknown"]], str, str]:
+    # sourcery skip: extract-method
     """
     Gets CPU information.
 
@@ -60,16 +86,12 @@ def get_cpu_info() -> tuple[int, str, Union[float, Literal["Unknown"]], str, str
     tuple: A tuple containing the number of CPUs, CPU info, frequency, cache size, and bogomips.
     """
     try:
+        cpu_info = get_cpu_processor_info()
         cpu_nb = psutil.cpu_count() or 0  # if psutil.cpu_count() is not None else 0
-        cpu_info = platform.processor() or "UNKNOWN"
         # cpu_freq = psutil.cpu_freq().max or 0  # if psutil.cpu_freq() is not None else 0
         cpu_freq_info = psutil.cpu_freq()
         cpu_freq = cpu_freq_info.max if cpu_freq_info is not None else 0
-
-        # cache size and bogomips are not available via psutil so we need to get them from files
         cpu_cache, cpu_bogomips = get_cpu_cache_and_bogomips()
-        # cpu_cache = 'UNKNOWN'
-        # cpu_bogomips = 'UNKNOWN'
 
         return cpu_nb, cpu_info, cpu_freq, cpu_cache, cpu_bogomips
     except psutil.Error:
@@ -154,7 +176,7 @@ def print_cpu_info() -> None:
     os_type = platform.system()
     cpu_nb, cpu_info, cpu_freq, cpu_cache, cpu_bogomips = get_cpu_info()
     print_title("CPU Information")
-    print_bold_kv("Number", str(cpu_nb))
+    print_bold_kv("Number of cores", str(cpu_nb))
     print_bold_kv("Model", cpu_info)
     print_bold_kv("Frequency", f"{cpu_freq} MHz")
     print_bold_kv("Cache L2", cpu_cache)
