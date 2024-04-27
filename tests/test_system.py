@@ -1,8 +1,5 @@
 import pytest
-import subprocess
 from unittest.mock import patch, MagicMock
-import os
-import time
 from src.core.system import get_last_boot_time_macos, get_system_uptime, get_user_count_unix, get_system_info
 
 # Test get_last_boot_time_macos
