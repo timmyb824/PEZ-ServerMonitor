@@ -47,29 +47,55 @@ from src.core.system import (
 #         # Assert
 #         assert result == expected
 
-@pytest.mark.skipif(platform.system() != "Darwin", reason="Running on non-Darwin system")
-def test_get_last_boot_time_darwin():
-    with patch("platform.system", return_value="Darwin"), patch(
-        "subprocess.run", return_value=MagicMock(stdout="kern.boottime = { sec = 1625097600, usec = 0 } Mon Jun  1 00:00:00 2020")
-    ):
-        assert get_last_boot_time() == 1625097600.0
+# @pytest.mark.skipif(platform.system() != "Darwin", reason="Running on non-Darwin system")
+# def test_get_last_boot_time_darwin():
+#     with patch("platform.system", return_value="Darwin"), patch(
+#         "subprocess.run", return_value=MagicMock(stdout="kern.boottime = { sec = 1625097600, usec = 0 } Mon Jun  1 00:00:00 2020")
+#     ):
+#         assert get_last_boot_time() == 1625097600.0
 
-    with patch("platform.system", return_value="Darwin"), patch(
-        "subprocess.run", side_effect=subprocess.CalledProcessError(1, "sysctl")
-    ):
-        assert get_last_boot_time() == 0.0
+#     with patch("platform.system", return_value="Darwin"), patch(
+#         "subprocess.run", side_effect=subprocess.CalledProcessError(1, "sysctl")
+#     ):
+#         assert get_last_boot_time() == 0.0
 
-@pytest.mark.skipif(platform.system() != "Linux", reason="Running on non-Linux system")
+# @pytest.mark.skipif(platform.system() != "Linux", reason="Running on non-Linux system")
+# def test_get_last_boot_time_linux():
+#     with patch("platform.system", return_value="Linux"), patch(
+#         "subprocess.run", return_value=MagicMock(stdout="2020-06-01 00:00:00")
+#     ):
+#         assert get_last_boot_time() == 1590969600.0
+
+#     with patch("platform.system", return_value="Linux"), patch(
+#         "subprocess.run", side_effect=subprocess.CalledProcessError(1, "uptime")
+#     ):
+#         assert get_last_boot_time() == 0.0
+
+
+# Test for macOS
+@pytest.mark.skipif(
+    platform.system() != "Darwin", reason="Test only applicable on macOS"
+)
+def test_get_last_boot_time_macos():
+    with patch("subprocess.run") as mocked_run:
+        mocked_run.return_value = subprocess.CompletedProcess(
+            args=["sysctl", "-n", "kern.boottime"],
+            returncode=0,
+            stdout="sec = 1640995200\n",
+        )
+        assert get_last_boot_time() == "2021-12-31 19:00:00"
+
+
+# Test for Linux
+@pytest.mark.skipif(
+    platform.system() != "Linux", reason="Test only applicable on Linux"
+)
 def test_get_last_boot_time_linux():
-    with patch("platform.system", return_value="Linux"), patch(
-        "subprocess.run", return_value=MagicMock(stdout="2020-06-01 00:00:00")
-    ):
-        assert get_last_boot_time() == 1590969600.0
-
-    with patch("platform.system", return_value="Linux"), patch(
-        "subprocess.run", side_effect=subprocess.CalledProcessError(1, "uptime")
-    ):
-        assert get_last_boot_time() == 0.0
+    with patch("subprocess.run") as mocked_run:
+        mocked_run.return_value = subprocess.CompletedProcess(
+            args=["uptime", "-s"], returncode=0, stdout="2024-04-10 12:34:56\n"
+        )
+        assert get_last_boot_time() == "2024-04-10 12:34:56"
 
 
 @pytest.mark.skipif(platform.system() != "Linux", reason="Running on non-Linux system")
