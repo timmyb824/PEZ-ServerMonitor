@@ -95,9 +95,7 @@ def get_system_info() -> dict:
     }
 
     system_info["uptime"] = get_system_uptime()
-    system_info["last_boot_date"] = time.strftime(
-        "%Y-%m-%d %H:%M:%S", time.localtime(get_last_boot_time())
-    )
+    system_info["last_boot_date"] = get_last_boot_time()
     if system_info["os_type"] == "Linux":
         import distro  # distro is a Linux-specific package
 
