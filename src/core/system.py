@@ -8,22 +8,35 @@ import re
 from src.utilities.utils import print_bold_kv, print_title
 
 
-def get_last_boot_time_macos() -> float:
+def get_last_boot_time() -> float:
     """Returns the last boot time as a float for macOS."""
-    try:
-        result = subprocess.run(
-            ["sysctl", "-n", "kern.boottime"],
-            capture_output=True,
-            text=True,
-            check=True,
-        ).stdout.strip()
-        if match := re.search(r"sec = (\d+)", result):
-            return float(match[1])
-        else:
-            raise ValueError("Could not parse kern.boottime output")
-    except (subprocess.CalledProcessError, ValueError) as e:
-        print(f"An error occurred while getting last boot time: {e}")
-        return 0.0
+    if platform.system() == "Darwin":
+        try:
+            result = subprocess.run(
+                ["sysctl", "-n", "kern.boottime"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            if match := re.search(r"sec = (\d+)", result):
+                return float(match[1])
+            else:
+                raise ValueError("Could not parse kern.boottime output")
+        except (subprocess.CalledProcessError, ValueError) as e:
+            print(f"An error occurred while getting last boot time: {e}")
+            return 0.0
+    else:
+        try:
+            result = subprocess.run(
+                ["uptime", "-s"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            return float(result)
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred while getting last boot time: {e}")
+            return 0.0
 
 
 def get_system_uptime() -> str:
@@ -81,18 +94,20 @@ def get_system_info() -> dict:
         "current_date": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
     }
 
+    system_info["uptime"] = get_system_uptime()
+    system_info["last_boot_date"] = time.strftime(
+        "%Y-%m-%d %H:%M:%S", time.localtime(get_last_boot_time())
+    )
     if system_info["os_type"] == "Linux":
         import distro  # distro is a Linux-specific package
 
         system_info["dist"] = distro.name()
         system_info["dist_version"] = distro.version()
-        system_info["uptime"] = get_system_uptime()
         system_info["users_nb"] = get_user_count_unix("/home")
 
     elif system_info["os_type"] == "Darwin":
         system_info["dist"] = "macOS"
         system_info["dist_version"] = platform.mac_ver()[0]
-        system_info["uptime"] = get_system_uptime()
         system_info["users_nb"] = get_user_count_unix("/Users")
 
     return system_info
