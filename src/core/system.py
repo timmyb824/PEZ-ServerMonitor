@@ -3,7 +3,7 @@ import platform
 import subprocess
 import time
 import re
-import distro
+
 
 from src.utilities.utils import print_bold_kv, print_title
 
@@ -82,9 +82,9 @@ def get_system_info() -> dict:
     }
 
     if system_info["os_type"] == "Linux":
-        system_info["dist"] = distro.name(
-            pretty=True
-        )  # This should include the codename
+        import distro  # distro is a Linux-specific package
+
+        system_info["dist"] = distro.name()
         system_info["dist_version"] = distro.version()
         system_info["uptime"] = get_system_uptime()
         system_info["users_nb"] = get_user_count_unix("/home")
