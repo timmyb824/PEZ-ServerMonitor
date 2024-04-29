@@ -2,6 +2,13 @@
 
 
 
+## v1.8.1 (2024-04-29)
+
+### Style
+
+* style: update macos warning message and add message for linux ([`5e24a65`](https://github.com/timmyb824/python-SysInformer/commit/5e24a657912fcf4ae3f256e3845f30db25d9f2d0))
+
+
 ## v1.8.0 (2024-04-29)
 
 ### Feature
