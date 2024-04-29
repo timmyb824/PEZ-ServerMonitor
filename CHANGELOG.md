@@ -2,6 +2,27 @@
 
 
 
+## v1.8.0 (2024-04-29)
+
+### Feature
+
+* feat: Update patch tags in pyproject.toml ([`e1010e2`](https://github.com/timmyb824/python-SysInformer/commit/e1010e2df40262c35faf9f759d8048b09347a1c7))
+
+### Refactor
+
+* refactor(system.py): remove commented-out code and unused imports for cleaner codebase
+feat(system.py): improve support for retrieving distribution version for Linux systems
+feat(system.py): add handling for unsupported operating systems in get_last_boot_time() and get_system_uptime() functions
+refactor(system.py): remove commented-out code and unused imports
+test(system.py): remove commented-out test cases and TODOs for missing tests ([`36a289e`](https://github.com/timmyb824/python-SysInformer/commit/36a289e8e40fdf84074c392f20a49fe33e5ab9a7))
+
+### Unknown
+
+* Merge pull request #57 from timmyb824/refactor/improve-dist-version
+
+Merge pull request #56 from timmyb824/refactor/system-info ([`5abc0a3`](https://github.com/timmyb824/python-SysInformer/commit/5abc0a332c974755c3d9732e7cd9a6650d689441))
+
+
 ## v1.7.0 (2024-04-29)
 
 ### Feature
