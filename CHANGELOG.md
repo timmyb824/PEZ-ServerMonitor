@@ -2,6 +2,43 @@
 
 
 
+## v1.7.0 (2024-04-29)
+
+### Feature
+
+* feat(system.py): add support for retrieving last boot time as a date and time string
+feat(system.py): improve error handling and return meaningful messages for obtaining last boot time
+feat(system.py): add function to get system uptime as a string
+test(system.py): add tests for retrieving last boot time on macOS and Linux platforms ([`46c4c3b`](https://github.com/timmyb824/python-SysInformer/commit/46c4c3b5a73fe90524d4aea783218cc1f6a1d3c1))
+
+* feat: Add distro module to get system information and update system uptime calculation ([`36186d3`](https://github.com/timmyb824/python-SysInformer/commit/36186d3ab674c0861de05fd879faa9fd5fc49078))
+
+### Fix
+
+* fix(system.py): remove unused import statement for distro package
+feat(system.py): import distro package within the Linux-specific block to ensure it is only imported when needed
+feat(test_system.py): refactor test_get_system_uptime to include separate test cases for Linux and Darwin systems
+feat(test_system.py): add skipif decorators to test_get_system_uptime_linux and test_get_system_uptime_darwin
+feat(test_system.py): refactor test_get_user_count_unix to include multiple test cases with parameters
+feat(test_system.py): refactor test_get_system_info to include separate test cases for Linux and Darwin systems ([`322ed74`](https://github.com/timmyb824/python-SysInformer/commit/322ed744def8333776a4d78b4b05165234828922))
+
+### Refactor
+
+* refactor: Simplify retrieving last boot date in system information ([`e15fd83`](https://github.com/timmyb824/python-SysInformer/commit/e15fd8320dcc11e4b8076f827de1d1a643a88da5))
+
+* refactor(system.py): rename get_last_boot_time_macos to get_last_boot_time and add support for retrieving last boot time on non-Darwin systems
+feat(system.py): add logic to retrieve last boot time using &#39;uptime -s&#39; command on non-Darwin systems
+test(system.py): add tests for get_last_boot_time function for both Darwin and non-Darwin systems ([`31b0063`](https://github.com/timmyb824/python-SysInformer/commit/31b006393d80e61695378703ae0bbba9a4b41f2c))
+
+### Unknown
+
+* Merge pull request #56 from timmyb824/refactor/system-info
+
+refactor/system info ([`aab0662`](https://github.com/timmyb824/python-SysInformer/commit/aab066216bfa6f292129be3e605aa51afba78276))
+
+* Update README.md ([`7fbc4a3`](https://github.com/timmyb824/python-SysInformer/commit/7fbc4a3e200edb4b4dbb4e33535a6c99c7abb239))
+
+
 ## v1.6.0 (2024-04-11)
 
 ### Chore
