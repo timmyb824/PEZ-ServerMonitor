@@ -1,4 +1,5 @@
 import os
+import datetime
 import platform
 import subprocess
 import time
@@ -8,35 +9,95 @@ import re
 from src.utilities.utils import print_bold_kv, print_title
 
 
-def get_last_boot_time_macos() -> float:
-    """Returns the last boot time as a float for macOS."""
-    try:
-        result = subprocess.run(
-            ["sysctl", "-n", "kern.boottime"],
-            capture_output=True,
-            text=True,
-            check=True,
-        ).stdout.strip()
-        if match := re.search(r"sec = (\d+)", result):
-            return float(match[1])
-        else:
-            raise ValueError("Could not parse kern.boottime output")
-    except (subprocess.CalledProcessError, ValueError) as e:
-        print(f"An error occurred while getting last boot time: {e}")
-        return 0.0
+# def get_last_boot_time() -> float:
+#     """Returns the last boot time as a float for macOS."""
+#     if platform.system() == "Darwin":
+#         try:
+#             result = subprocess.run(
+#                 ["sysctl", "-n", "kern.boottime"],
+#                 capture_output=True,
+#                 text=True,
+#                 check=True,
+#             ).stdout.strip()
+#             if match := re.search(r"sec = (\d+)", result):
+#                 return float(match[1])
+#             else:
+#                 raise ValueError("Could not parse kern.boottime output")
+#         except (subprocess.CalledProcessError, ValueError) as e:
+#             print(f"An error occurred while getting last boot time: {e}")
+#             return 0.0
+#     else:
+#         try:
+#             result = subprocess.run(
+#                 ["uptime", "-s"],
+#                 capture_output=True,
+#                 text=True,
+#                 check=True,
+#             ).stdout.strip()
+#             return float(result)
+#         except subprocess.CalledProcessError as e:
+#             print(f"An error occurred while getting last boot time: {e}")
+#             return 0.0
+
+
+def get_last_boot_time() -> str:
+    """Returns the last boot time as a date and time string."""
+    if platform.system() == "Darwin":
+        try:
+            result = subprocess.run(
+                ["sysctl", "-n", "kern.boottime"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            if match := re.search(r"sec = (\d+)", result):
+                boot_timestamp = int(match[1])
+                return datetime.datetime.fromtimestamp(boot_timestamp).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+            else:
+                raise ValueError("Could not parse kern.boottime output")
+        except (subprocess.CalledProcessError, ValueError) as e:
+            print(f"An error occurred while getting last boot time: {e}")
+            return "Error obtaining last boot time"
+    else:  # Assuming this else branch is for Linux
+        try:
+            return subprocess.run(
+                ["uptime", "-s"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred while getting last boot time: {e}")
+            return "Error obtaining last boot time"
+
 
 def get_system_uptime() -> str:
-    try:
-        uptime_output = subprocess.run(
-            ["uptime"],
-            capture_output=True,
-            text=True,
-            check=True,
-        ).stdout.strip()
-        return ', '.join(uptime_output.split(',')[:2])
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred while getting system uptime: {e}")
-        return "Error in obtaining uptime"
+    """Returns the system uptime as a string."""
+    if platform.system() == "Linux":
+        try:
+            uptime_seconds = time.time() - os.stat("/proc/1").st_ctime
+            days, rem = divmod(uptime_seconds, 86400)
+            hours, rem = divmod(rem, 3600)
+            minutes, _ = divmod(rem, 60)
+            return f"{int(days)} days, {int(hours)} hours, {int(minutes)} minutes"
+        except Exception as e:
+            print(f"An error occurred while getting system uptime on Linux: {e}")
+            return "Error in obtaining uptime"
+    else:
+        try:
+            uptime_output = subprocess.run(
+                ["uptime"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            return ", ".join(uptime_output.split(",")[:2])
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred while getting system uptime: {e}")
+            return "Error in obtaining uptime"
+
 
 def get_user_count_unix(path: str) -> int:
     """Counts the number of user directories in the given path for Unix systems."""
@@ -53,7 +114,7 @@ def get_user_count_unix(path: str) -> int:
         return 0
 
 
-def get_system_info() -> dict:  # sourcery skip: extract-method
+def get_system_info() -> dict:
     """Gets system information depending on the OS."""
     system_info = {
         "os_type": platform.system(),
@@ -68,31 +129,18 @@ def get_system_info() -> dict:  # sourcery skip: extract-method
         "current_date": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
     }
 
+    system_info["uptime"] = get_system_uptime()
+    system_info["last_boot_date"] = get_last_boot_time()
     if system_info["os_type"] == "Linux":
         import distro  # distro is a Linux-specific package
 
         system_info["dist"] = distro.name()
         system_info["dist_version"] = distro.version()
-        try:
-            with open("/proc/uptime", "r", encoding="utf-8") as f:
-                uptime_seconds = float(f.readline().split()[0])
-            boot_time = time.time() - uptime_seconds
-            system_info["last_boot_date"] = time.strftime(
-                "%Y-%m-%d %H:%M:%S", time.localtime(boot_time)
-            )
-            system_info["uptime"] = get_system_uptime()
-        except IOError as e:
-            print(f"An error occurred while reading /proc/uptime: {e}")
         system_info["users_nb"] = get_user_count_unix("/home")
 
     elif system_info["os_type"] == "Darwin":
         system_info["dist"] = "macOS"
         system_info["dist_version"] = platform.mac_ver()[0]
-        boot_time = get_last_boot_time_macos()
-        system_info["last_boot_date"] = time.strftime(
-            "%Y-%m-%d %H:%M:%S", time.localtime(boot_time)
-        )
-        system_info["uptime"] = get_system_uptime()
         system_info["users_nb"] = get_user_count_unix("/Users")
 
     return system_info
