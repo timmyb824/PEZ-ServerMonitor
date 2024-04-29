@@ -148,13 +148,14 @@ def get_memory_info_macos() -> (
         swap_used_percentage,
     )
 
+
 def show_warning_msg() -> Optional[str]:
     """
     Print the macOS warning message
     """
     if platform.system() == "Darwin":
-        return "\033[1mWARNING\033[0m: memory usage of all processes used to calculate free memory on macOS"
-
+        return "\033[1mWARNING\033[0m: memory usage of all processes used to calculate free memory"
+    return "\033[1mWARNING\033[0m: memory usage derived from '/proc/meminfo'"
 
 
 def print_memory_info() -> None:
