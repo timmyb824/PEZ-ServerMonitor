@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import click
 
 from src.constants import CONFIG_PATH_DEFAULT
@@ -14,13 +15,13 @@ from src.core.system import print_system_info
 
 
 DISPATCH = {
-    "all": lambda config: print_all_info(config),
+    "all": lambda config: print_all_info(config), # pylint: disable=unnecessary-lambda
     "system": lambda _: print_system_info(),
     "cpu": lambda _: (print_cpu_info(), print_cpu_usage_info()),
     "memory": lambda _: (print_memory_info(), print_memory_usage_info()),
     "disk": lambda _: print_disk_info(),
     "network": lambda config: (print_network_info(), print_latency_info(config)),
-    "processes": lambda config: print_process_info(config),
+    "processes": lambda config: print_process_info(config), # pylint: disable=unnecessary-lambda
     "containers": lambda _: print_running_containers(),
 }
 
@@ -48,7 +49,9 @@ def print_version():
     # version = pkg_resources.get_distribution('python-sysinformer').version
     # use importlib.resources to get the version
     try:
-        from importlib.metadata import version  # pylint: disable=import-outside-toplevel
+        from importlib.metadata import ( # pylint: disable=import-outside-toplevel
+            version,
+        )
 
         psi_version = version("python-sysinformer")
         print(f"psi version {psi_version}")
@@ -116,17 +119,17 @@ def print_all_info(config_path: str) -> None:
     Args:
         config_file (str): The path to the config file.
     """
-    # check_os()
-    print_system_info()
-    print_cpu_info()
-    print_cpu_usage_info()
-    print_memory_info()
-    print_memory_usage_info()
-    print_disk_info()
-    print_network_info()
-    print_latency_info(config_path)
-    print_process_info(config_path)
-    print_running_containers()
+    with ThreadPoolExecutor() as executor:
+        executor.submit(print_system_info)
+        executor.submit(print_cpu_info)
+        executor.submit(print_cpu_usage_info)
+        executor.submit(print_memory_info)
+        executor.submit(print_memory_usage_info)
+        executor.submit(print_disk_info)
+        executor.submit(print_network_info)
+        executor.submit(print_latency_info, config_path)
+        executor.submit(print_process_info, config_path)
+        executor.submit(print_running_containers)
 
 
 if __name__ == "__main__":
