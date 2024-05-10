@@ -2,6 +2,19 @@
 
 
 
+## v1.9.0 (2024-05-10)
+
+### Feature
+
+* feat: include mem usage from psutil ([`1394e4c`](https://github.com/timmyb824/python-SysInformer/commit/1394e4ca34f31da71d5e87c9eac3ade3c820f265))
+
+### Unknown
+
+* Merge pull request #58 from timmyb824/feat/include-psutil-mem
+
+feat: include mem usage from psutil ([`7410dfb`](https://github.com/timmyb824/python-SysInformer/commit/7410dfb483074c772d85ab65e884f0ea09f96fe6))
+
+
 ## v1.8.1 (2024-04-29)
 
 ### Style
