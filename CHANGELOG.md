@@ -2,6 +2,19 @@
 
 
 
+## v1.10.0 (2024-06-10)
+
+### Feature
+
+* feat: Add fallback using curl if ping fails due to &#34;Permission denied&#34; ([`c94410c`](https://github.com/timmyb824/python-SysInformer/commit/c94410ce58293af597ba83ee92e5cc6d37d5e2ee))
+
+### Unknown
+
+* Merge pull request #59 from timmyb824/fix/permission-issue-using-ping
+
+feat: Add fallback using curl if ping fails due to &#34;Permission denied&#34; ([`21e58f0`](https://github.com/timmyb824/python-SysInformer/commit/21e58f0357453bff5c8ee7932ea069162a860705))
+
+
 ## v1.9.0 (2024-05-10)
 
 ### Feature
