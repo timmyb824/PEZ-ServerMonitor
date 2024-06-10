@@ -1,4 +1,5 @@
 import math
+import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import yaml
@@ -16,7 +17,8 @@ from src.utilities.utils import print_bold_kv, print_title
 
 def check_ping(host: str) -> str:
     """
-    Checks the latency of the host.
+    Checks the latency of the host. Tries using the `ping` command first.
+    If it results in a "Permission denied" error, it falls back to using `curl`.
 
     Args:
         host (str): Host to be pinged.
@@ -30,6 +32,21 @@ def check_ping(host: str) -> str:
             return "Timed Out"
         latency *= 1000  # Convert seconds to milliseconds
         return f"{round(latency, 2)} ms"
+    except PermissionError:
+        try:
+            # Use curl to get latency
+            process = subprocess.run(
+                ["curl", "-o", "/dev/null", "-s", "-w", "%{time_total}", f"{host}"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            latency = float(process.stdout) * 1000  # Convert seconds to milliseconds
+            return f"{round(latency, 2)} ms"
+        except subprocess.CalledProcessError as e:
+            return f"Error: {e.stderr}"
+        except Exception as e:
+            return f"Error: {e}"
     except Exception as exception:
         return f"Error: {exception}"
 
