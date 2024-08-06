@@ -2,6 +2,23 @@
 
 
 
+## v1.10.1 (2024-08-06)
+
+### Fix
+
+* fix(ci): Correct Python script path in CI workflow ([`6e2400a`](https://github.com/timmyb824/python-SysInformer/commit/6e2400af44dd2da090a05909499ba0b8a8f231cf))
+
+### Refactor
+
+* refactor: convert to sysinformer namespace rather than src ([`603f898`](https://github.com/timmyb824/python-SysInformer/commit/603f8989bdfbfb8bf798faf3b3b48ab1853bb01f))
+
+### Unknown
+
+* Merge pull request #60 from timmyb824/refactor/stop-using-src
+
+refactor: convert to sysinformer namespace rather than src ([`1f86e68`](https://github.com/timmyb824/python-SysInformer/commit/1f86e6841c4eb81d932bfda1b40ffc223162048a))
+
+
 ## v1.10.0 (2024-06-10)
 
 ### Feature
