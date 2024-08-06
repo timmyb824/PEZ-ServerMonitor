@@ -1,6 +1,6 @@
 # import unittest
-# from src.constants import ROOT_DIR
-# from src.config_parser import parse_config_file
+# from sysinformer.constants import ROOT_DIR
+# from sysinformer.config_parser import parse_config_file
 
 # class TestParseConfigFile(unittest.TestCase):
 #     def test_parse_config_file(self):
@@ -68,7 +68,7 @@
 
 # import pytest
 # import os
-# from src.config_parser import parse_config_file #, FileNotFoundError, YamlError
+# from sysinformer.config_parser import parse_config_file #, FileNotFoundError, YamlError
 
 # dummy_yaml = """
 # services:
@@ -146,7 +146,7 @@
 import pytest
 import yaml
 
-from src.config.config_parser import (
+from sysinformer.config.config_parser import (
     ConfigFileNotFoundException,
     UnexpectedError,
     YAMLParseError,
@@ -161,7 +161,7 @@ def test_parse_config_file_success(tmpdir):
         "services": [{"name": "Test Service", "port": 1234, "host": "localhost"}],
         "ping_hosts": ["localhost"],
     }
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="UTF-8") as f:
         yaml.dump(config_dict, f)
 
     # Ensure parse_config_file successfully parses the file

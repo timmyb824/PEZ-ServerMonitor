@@ -1,12 +1,13 @@
-import os
 import datetime
+import os
 import platform
+import re
 import subprocess
 import time
-import re
+
 import distro
 
-from src.utilities.utils import print_bold_kv, print_title
+from sysinformer.utilities.utils import print_bold_kv, print_title
 
 
 def get_last_boot_time() -> str:

@@ -6,13 +6,13 @@ import yaml
 from ping3 import ping
 from tabulate import tabulate
 
-from src.config.config_parser import parse_config_file
-from src.utilities.exceptions import (
+from sysinformer.config.config_parser import parse_config_file
+from sysinformer.utilities.exceptions import (
     ConfigFileNotFoundException,
     UnexpectedError,
     YAMLParseError,
 )
-from src.utilities.utils import print_bold_kv, print_title
+from sysinformer.utilities.utils import print_bold_kv, print_title
 
 
 def check_ping(host: str) -> str:

@@ -1,5 +1,5 @@
 # import unittest
-# from src.disks import get_disk_space
+# from sysinformer.disks import get_disk_space
 
 # class TestGetDiskSpace(unittest.TestCase):
 #     def test_returns_list_of_dicts(self):
@@ -13,7 +13,7 @@ from unittest.mock import patch
 import psutil
 import pytest
 
-from src.core.disks import get_disk_space, print_disk_info
+from sysinformer.core.disks import get_disk_space, print_disk_info
 
 
 @patch("psutil.disk_usage")
@@ -47,7 +47,7 @@ def test_get_disk_space(mock_disk_partitions, mock_disk_usage):
     assert get_disk_space() == expected_output
 
 
-@patch("src.core.disks.get_disk_space")
+@patch("sysinformer.core.disks.get_disk_space")
 def test_print_disk_info(mock_get_disk_space, capsys):
     mock_get_disk_space.return_value = [
         {
@@ -86,7 +86,7 @@ def test_print_disk_info(mock_get_disk_space, capsys):
 
 # def test_print_disk_info(capsys):
 #     with patch('utils.print_title') as mock_print_title:
-#         with patch('src.disk.get_disk_space') as mock_get_disk_space:
+#         with patch('sysinformer.disk.get_disk_space') as mock_get_disk_space:
 #             mock_get_disk_space.return_value = mock_disk_info
 #             print_disk_info()
 #     captured = capsys.readouterr()

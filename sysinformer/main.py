@@ -1,17 +1,16 @@
 import click
 
-from src.constants import CONFIG_PATH_DEFAULT
-from src.config.default_config import write_default_config
-from src.core.containers import print_running_containers
-from src.core.cpu import print_cpu_info
-from src.core.disks import print_disk_info
-from src.core.latency import print_latency_info
-from src.core.memory import print_memory_info
-from src.core.networking import print_network_info
-from src.core.processes import print_cpu_usage_info, print_memory_usage_info
-from src.core.services import print_process_info
-from src.core.system import print_system_info
-
+from sysinformer.config.default_config import write_default_config
+from sysinformer.constants import CONFIG_PATH_DEFAULT
+from sysinformer.core.containers import print_running_containers
+from sysinformer.core.cpu import print_cpu_info
+from sysinformer.core.disks import print_disk_info
+from sysinformer.core.latency import print_latency_info
+from sysinformer.core.memory import print_memory_info
+from sysinformer.core.networking import print_network_info
+from sysinformer.core.processes import print_cpu_usage_info, print_memory_usage_info
+from sysinformer.core.services import print_process_info
+from sysinformer.core.system import print_system_info
 
 DISPATCH = {
     "all": lambda config: print_all_info(config),
@@ -48,7 +47,9 @@ def print_version():
     # version = pkg_resources.get_distribution('python-sysinformer').version
     # use importlib.resources to get the version
     try:
-        from importlib.metadata import version  # pylint: disable=import-outside-toplevel
+        from importlib.metadata import (
+            version,
+        )  # pylint: disable=import-outside-toplevel
 
         psi_version = version("python-sysinformer")
         print(f"psi version {psi_version}")

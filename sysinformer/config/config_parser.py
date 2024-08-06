@@ -1,6 +1,6 @@
 import yaml
 
-from src.utilities.exceptions import (
+from sysinformer.utilities.exceptions import (
     ConfigFileNotFoundException,
     UnexpectedError,
     YAMLParseError,

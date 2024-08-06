@@ -1,11 +1,11 @@
 import os
 import platform
-from typing import Literal, Union
 import subprocess
+from typing import Literal, Union
 
 import psutil
 
-from src.utilities.utils import print_bold_kv, print_title
+from sysinformer.utilities.utils import print_bold_kv, print_title
 
 
 def get_cpu_cache_and_bogomips() -> tuple[str, str]:
@@ -42,7 +42,10 @@ def get_cpu_cache_and_bogomips() -> tuple[str, str]:
         try:
             # Retrieve the L2 cache size
             result = subprocess.run(
-                ["sysctl", "-n", "hw.l2cachesize"], capture_output=True, check=True, text=True
+                ["sysctl", "-n", "hw.l2cachesize"],
+                capture_output=True,
+                check=True,
+                text=True,
             )
             if result.returncode == 0 and result.stdout:
                 cpu_cache = f"{int(result.stdout.strip()) // 1024} KB"
@@ -64,12 +67,15 @@ def get_cpu_processor_info() -> str:
         if os_type == platform.system() == "Linux":
             cpu_info = platform.processor() or "UNKNOWN"
         elif os_type == "Darwin":
-            cpu_info = subprocess.run(
-                ["sysctl", "-n", "machdep.cpu.brand_string"],
-                capture_output=True,
-                check=True,
-                text=True,
-            ).stdout.strip() or "UNKNOWN"
+            cpu_info = (
+                subprocess.run(
+                    ["sysctl", "-n", "machdep.cpu.brand_string"],
+                    capture_output=True,
+                    check=True,
+                    text=True,
+                ).stdout.strip()
+                or "UNKNOWN"
+            )
         else:
             cpu_info = "UNKNOWN"
     except (subprocess.SubprocessError, FileNotFoundError):
@@ -155,7 +161,7 @@ def get_system_temperature() -> tuple[str, bool]:
         )
 
     try:
-        temps = psutil.sensors_temperatures() # type: ignore
+        temps = psutil.sensors_temperatures()  # type: ignore
         if "coretemp" in temps:
             cputemp = temps["coretemp"]
             for item in cputemp:
