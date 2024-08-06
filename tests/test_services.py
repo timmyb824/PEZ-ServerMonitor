@@ -3,7 +3,11 @@ from unittest.mock import patch
 
 import pytest
 
-from src.core.services import check_a_service, get_process_count, print_process_info
+from sysinformer.core.services import (
+    check_a_service,
+    get_process_count,
+    print_process_info,
+)
 
 
 def test_check_a_service():

@@ -3,7 +3,7 @@ from unittest.mock import patch
 import netifaces
 import pytest
 
-from src.core.networking import (
+from sysinformer.core.networking import (
     get_network_activity,
     get_network_info,
     print_network_info,

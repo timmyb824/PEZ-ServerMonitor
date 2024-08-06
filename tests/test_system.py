@@ -1,8 +1,10 @@
-import subprocess
 import platform
-from unittest.mock import patch, MagicMock
+import subprocess
+from unittest.mock import MagicMock, patch
+
 import pytest
-from src.core.system import (
+
+from sysinformer.core.system import (
     get_last_boot_time,
     get_system_uptime,
     get_user_count_unix,
@@ -83,4 +85,6 @@ def test_get_user_count_unix(path, dirs, expected):
         # Assert
         assert result == expected
 
-#TODO: Add test back for get_system_info
+
+# TODO: Add test back for get_system_info
+

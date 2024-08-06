@@ -4,7 +4,7 @@ version = "1.10.0"
 description = "A simple system information tool for Linux"
 authors = ["Timothy Bryant <timothybryant3@gmail.com>"]
 readme = "README.md"
-packages = [{include = "src", from = "."}]
+packages = [{include = "sysinformer", from = "."}]
 # classifiers = ["Private :: Do not Upload"]
 
 [tool.poetry.dependencies]
@@ -38,11 +38,11 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 pythonpath = [
-  ".", "src"
+  ".", "sysinformer"
 ]
 
 [tool.poetry.scripts]
-psi = "src.main:cli"
+psi = "sysinformer.main:cli"
 
 [tool.semantic_release.commit_parser_options]
 allowed_tags = [

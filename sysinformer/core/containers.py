@@ -5,8 +5,8 @@ from typing import Optional
 
 from tabulate import tabulate
 
-from src.utilities.exceptions import CommandNotFoundError
-from src.utilities.utils import print_title
+from sysinformer.utilities.exceptions import CommandNotFoundError
+from sysinformer.utilities.utils import print_title
 
 
 def check_if_installed(command: str) -> bool:

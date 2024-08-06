@@ -1,8 +1,8 @@
 import pytest
 
-from src.core.memory import (  # get_memory_info,; get_memory_info_macos,
+from sysinformer.core.memory import (
     calculate_memory_usage,
-)
+)  # get_memory_info,; get_memory_info_macos,
 
 
 # Test for calculate_memory_usage

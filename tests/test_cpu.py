@@ -1,8 +1,9 @@
-import pytest
 import platform
+from unittest.mock import MagicMock, mock_open, patch
 
-from unittest.mock import patch, MagicMock, mock_open
-from src.core.cpu import (
+import pytest
+
+from sysinformer.core.cpu import (
     get_cpu_cache_and_bogomips,
     get_cpu_info,
     get_cpu_usage,
@@ -21,8 +22,8 @@ from src.core.cpu import (
     ],
     ids=["linux-happy-path", "darwin-happy-path", "unsupported-os"],
 )
-@patch("src.core.cpu.platform.system")
-@patch("src.core.cpu.subprocess.run")
+@patch("sysinformer.core.cpu.platform.system")
+@patch("sysinformer.core.cpu.subprocess.run")
 @patch(
     "builtins.open",
     new_callable=mock_open,
@@ -39,19 +40,35 @@ def test_get_cpu_cache_and_bogomips(
     assert result == expected_output
 
 
-
 @pytest.mark.parametrize(
     "cpu_count,processor,freq,expected_output",
     [
-        pytest.param(4, "Intel", 2400.0, (4, "Intel", 2400.0, "1024 KB", "5000.00"), marks=pytest.mark.skipif(platform.processor() != "Intel", reason="requires Intel processor")),
-        pytest.param(0, "Apple M3 Pro", 0.0, (0, 'Apple M3 Pro', 0.0, '1024 KB', '5000.00'), marks=pytest.mark.skipif(platform.processor() != "Apple M3 Pro", reason="requires Apple M3 Pro processor")),
+        pytest.param(
+            4,
+            "Intel",
+            2400.0,
+            (4, "Intel", 2400.0, "1024 KB", "5000.00"),
+            marks=pytest.mark.skipif(
+                platform.processor() != "Intel", reason="requires Intel processor"
+            ),
+        ),
+        pytest.param(
+            0,
+            "Apple M3 Pro",
+            0.0,
+            (0, "Apple M3 Pro", 0.0, "1024 KB", "5000.00"),
+            marks=pytest.mark.skipif(
+                platform.processor() != "Apple M3 Pro",
+                reason="requires Apple M3 Pro processor",
+            ),
+        ),
     ],
     ids=["linux-happy-path", "darwin-happy-path"],
 )
-@patch("src.core.cpu.psutil.cpu_count")
-@patch("src.core.cpu.platform.processor")
-@patch("src.core.cpu.psutil.cpu_freq")
-@patch("src.core.cpu.get_cpu_cache_and_bogomips")
+@patch("sysinformer.core.cpu.psutil.cpu_count")
+@patch("sysinformer.core.cpu.platform.processor")
+@patch("sysinformer.core.cpu.psutil.cpu_freq")
+@patch("sysinformer.core.cpu.get_cpu_cache_and_bogomips")
 def test_get_cpu_info(
     mock_get_cpu_cache_and_bogomips,
     mock_cpu_freq,
@@ -80,7 +97,7 @@ def test_get_cpu_info(
     ],
     ids=["normal-usage", "no-usage"],
 )
-@patch("src.core.cpu.psutil.cpu_percent")
+@patch("sysinformer.core.cpu.psutil.cpu_percent")
 def test_get_cpu_usage(mock_cpu_percent, cpu_usage, expected_output):
     mock_cpu_percent.return_value = cpu_usage
 
@@ -97,7 +114,7 @@ def test_get_cpu_usage(mock_cpu_percent, cpu_usage, expected_output):
     ],
     ids=["low-load", "high-load"],
 )
-@patch("src.core.cpu.os.getloadavg")
+@patch("sysinformer.core.cpu.os.getloadavg")
 def test_get_load_average(mock_getloadavg, load_avg, expected_output):
     mock_getloadavg.return_value = load_avg
 
@@ -114,7 +131,7 @@ def test_get_load_average(mock_getloadavg, load_avg, expected_output):
     ],
     ids=["normal-count", "no-processes"],
 )
-@patch("src.core.cpu.psutil.pids")
+@patch("sysinformer.core.cpu.psutil.pids")
 def test_get_process_count(mock_pids, process_count, expected_output):
     mock_pids.return_value = list(range(process_count))
 
@@ -130,9 +147,9 @@ def test_get_process_count(mock_pids, process_count, expected_output):
         (
             "Linux",
             {"coretemp": [MagicMock(label="Package id 0", current=55.0)]},
-            ('Unable to get system temperature.', False),
+            ("Unable to get system temperature.", False),
         ),
-        ("Linux", {}, ('Unable to get system temperature.', False)),
+        ("Linux", {}, ("Unable to get system temperature.", False)),
         (
             "Windows",
             {},
@@ -141,8 +158,8 @@ def test_get_process_count(mock_pids, process_count, expected_output):
     ],
     ids=["linux-happy-path", "linux-no-temp", "unsupported-os"],
 )
-@patch("src.core.cpu.platform.system")
-@patch("src.core.cpu.psutil")
+@patch("sysinformer.core.cpu.platform.system")
+@patch("sysinformer.core.cpu.psutil")
 def test_get_system_temperature(
     mock_sensors_temperatures, mock_system, os_type, temps, expected_output
 ):

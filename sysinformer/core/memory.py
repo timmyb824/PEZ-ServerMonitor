@@ -1,12 +1,12 @@
 import platform
 import re
 import subprocess
-
 from typing import Literal, Optional
-from tabulate import tabulate
-import psutil
 
-from src.utilities.utils import print_title
+import psutil
+from tabulate import tabulate
+
+from sysinformer.utilities.utils import print_title
 
 
 def calculate_memory_usage(
@@ -39,9 +39,16 @@ def format_memory_value(value_in_mb: float) -> str:
         return f"{value_in_mb}MB"
 
 
-def get_memory_info() -> (
-    tuple[str, str, float | Literal[0], float | Literal[0], str, str, float | Literal[0], float | Literal[0]]
-):
+def get_memory_info() -> tuple[
+    str,
+    str,
+    float | Literal[0],
+    float | Literal[0],
+    str,
+    str,
+    float | Literal[0],
+    float | Literal[0],
+]:
     """Get memory information"""
     if platform.system() == "Darwin":
         return get_memory_info_macos()
@@ -116,9 +123,16 @@ def get_total_memory_of_all_processes() -> float:
     return ps_total / 1024 / 1024 or 0
 
 
-def get_memory_info_macos() -> (
-    tuple[str, str, float | Literal[0], float | Literal[0], str, str, float | Literal[0], float | Literal[0]]
-):
+def get_memory_info_macos() -> tuple[
+    str,
+    str,
+    float | Literal[0],
+    float | Literal[0],
+    str,
+    str,
+    float | Literal[0],
+    float | Literal[0],
+]:
     """Get memory information on macOS"""
     try:
         sysctl_output = subprocess.check_output(["sysctl", "-n", "hw.memsize"]).decode()
@@ -184,8 +198,20 @@ def print_memory_info() -> None:
     ) = get_memory_info()
 
     table = [
-        ["Memory", f"{mem_free}", f"{mem_total}", f"{mem_used_percentage_calc:.2f}%", f"{memory_usage:.2f}%"],
-        ["Swap", f"{swap_free}", f"{swap_total}", f"{swap_used_percentage_calc:.2f}%", f"{swap_usage:.2f}%"],
+        [
+            "Memory",
+            f"{mem_free}",
+            f"{mem_total}",
+            f"{mem_used_percentage_calc:.2f}%",
+            f"{memory_usage:.2f}%",
+        ],
+        [
+            "Swap",
+            f"{swap_free}",
+            f"{swap_total}",
+            f"{swap_used_percentage_calc:.2f}%",
+            f"{swap_usage:.2f}%",
+        ],
     ]
 
     headers = ["Type", "Free", "Total", "Calc Usage", "Sys Usage"]
